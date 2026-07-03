@@ -1416,7 +1416,10 @@ def main() -> None:
     # -- 2. Demo mode: ?demo=1 ----                                         
     if "demo" in params and params["demo"] == "1":
         st.session_state["demo_mode"] = True
+        tab = params.get("tab")
         st.query_params.clear()
+        if tab:
+            st.query_params["tab"] = tab
         st.rerun()
 
     # -- 3. Demo dashboard ----                                             
