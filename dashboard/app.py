@@ -967,7 +967,7 @@ def render_threat_intel() -> None:
 <div class="detail-card">
 <h3 style="margin-top:0; color:#38bdf8;">🛡️ Threat Intelligence Database</h3>
 <p style="font-size:13.5px; color:#94a3b8; line-height:1.6;">
-Inbox Guardian matches incoming headers and content against local threat databases to identify lookalike spoofing and recruitment fraud campaigns targeted at Indian students.
+Inbox Guardian checks incoming emails against lists of known unsafe domains and scams to keep you safe.
 </p>
 
 <hr>
@@ -1018,14 +1018,13 @@ Inbox Guardian matches incoming headers and content against local threat databas
 
 <h4 style="color:#ffffff; margin-bottom:12px;">🛡️ Email Authentication Baseline Requirements</h4>
 <p style="font-size:13px; color:#94a3b8; line-height:1.5; margin-bottom:14px;">
-Monitored brand communication must pass cryptographic SPF (Sender Policy Framework), DKIM (DomainKeys Identified Mail), and DMARC alignment checks. Any mismatch or failure results in an immediate safety alert score increase.
+Emails from trusted brands must pass security and authentication checks. Any mismatch or failure will immediately raise the threat alert score.
 </p>
 </div>
 """, unsafe_allow_html=True)
 
 
 def render_link_scanner() -> None:
-    st.markdown("<p style='font-size:13.5px; color:#94a3b8;'>Scan suspected links or redirect URLs for lookalike typo-squatting or malicious structures.</p>", unsafe_allow_html=True)
     
     url = st.text_input("🔗 Suspected URL", placeholder="e.g. tcs-hr-portal.info")
     
@@ -1074,7 +1073,6 @@ def render_link_scanner() -> None:
 
 
 def render_scam_detector() -> None:
-    st.markdown("<p style='font-size:13.5px; color:#94a3b8;'>Analyze job offers, emails, or texts in real time for Indian recruitment scams.</p>", unsafe_allow_html=True)
     
     sender = st.text_input("Sender Email / Display Name", value="HR Recruiting <hr@wipro-jobs-portal.info>")
     subject = st.text_input("Subject Line", value="Offer Letter Attached: Job Selection as Graduate Engineer Trainee")
@@ -1141,7 +1139,6 @@ def render_scam_detector() -> None:
 
 
 def render_user_reports() -> None:
-    st.markdown("<p style='font-size:13.5px; color:#94a3b8;'>Indian Student Community reported scams and campaign metrics.</p>", unsafe_allow_html=True)
     
     # Report a new scam form
     with st.expander("📝 Report a New Recruitment Scam"):
@@ -1179,7 +1176,6 @@ def render_user_reports() -> None:
 
 
 def render_analytics_tab(df: pd.DataFrame, filtered: pd.DataFrame) -> None:
-    st.markdown("<p style='font-size:13.5px; color:#94a3b8;'>Real-time metrics, pipeline statistics, and scoring analysis charts.</p>", unsafe_allow_html=True)
     
     # Display the charts directly (no expander)
     chart_col1, chart_col2 = st.columns(2)
@@ -1260,7 +1256,6 @@ def render_analytics_tab(df: pd.DataFrame, filtered: pd.DataFrame) -> None:
 
 
 def render_settings_tab(is_demo: bool) -> None:
-    st.markdown("<p style='font-size:13.5px; color:#94a3b8;'>Configure local pipeline thresholds, authentication rules, and fallback models.</p>", unsafe_allow_html=True)
     
     st.markdown("<h4 style='color:#ffffff; margin-bottom:12px;'>⚙️ Threat Detection Settings</h4>", unsafe_allow_html=True)
     
@@ -1401,14 +1396,53 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     status_label = "LIVE" if not is_demo else "DEMO"
     status_badge_html = f'<div class="{status_class}"><span class="{status_dot}"></span> {status_label}</div>'
 
-    title = "Threat Dashboard" if active_tab == "Dashboard" else "Email Analysis"
-    subtitle = "Real-time phishing intelligence & threat signal analysis" if active_tab == "Dashboard" else "Granular inspection of phishing signals, authentication checks, and threat heuristics"
+    tab_headers = {
+        "Dashboard": {
+            "title": "Threat Dashboard",
+            "subtitle": "Real-time safety summary and key threat statistics."
+        },
+        "Analysis": {
+            "title": "Email Analysis",
+            "subtitle": "Inspect specific emails for phishing details, links, and scam content."
+        },
+        "ThreatIntel": {
+            "title": "Threat Intelligence",
+            "subtitle": "Search and view a list of known unsafe links and fake domains."
+        },
+        "LinkScanner": {
+            "title": "Link Scanner",
+            "subtitle": "Check web links to see if they mimic trusted brands."
+        },
+        "ScamDetector": {
+            "title": "Scam Detector",
+            "subtitle": "Scan job offers, emails, or messages for money requests and fake offers."
+        },
+        "UserReports": {
+            "title": "User Reports",
+            "subtitle": "View safety reports submitted by other users, or report new ones."
+        },
+        "Analytics": {
+            "title": "Analytics Dashboard",
+            "subtitle": "Charts showing email safety distribution and risk trends over time."
+        },
+        "Settings": {
+            "title": "Settings",
+            "subtitle": "Configure scanning sensitivity, safety checks, and session options."
+        }
+    }
+    
+    header_info = tab_headers.get(active_tab, {
+        "title": "Threat Dashboard",
+        "subtitle": "Real-time safety summary and key threat statistics."
+    })
+    title = header_info["title"]
+    subtitle = header_info["subtitle"]
 
     header_col1, header_col2 = st.columns([3, 1])
     with header_col1:
         st.markdown(f"""
 <h2 style="margin:0 0 4px 0; font-weight:700; color:#ffffff; font-size:24px;">{title}</h2>
-<p style="margin:0; font-size:12.5px; color:#64748b;">{subtitle}</p>
+<p style="margin:0; font-size:13.5px; color:#94a3b8; font-weight:500;">{subtitle}</p>
 """, unsafe_allow_html=True)
     with header_col2:
         st.markdown(f"""
