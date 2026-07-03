@@ -68,20 +68,6 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Force dark theme layout for the entire app */
-[data-testid="stAppViewContainer"] {
-    background-color: #0b1329 !important;
-    background-image: radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0, transparent 50%),
-                      radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.05) 0, transparent 50%) !important;
-}
-[data-testid="stHeader"] {
-    background-color: transparent !important;
-}
-[data-testid="stSidebar"] {
-    background-color: #070d1e !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
 html, body, [class*="css"] { 
     font-family: 'Inter', sans-serif; 
 }
@@ -162,8 +148,8 @@ html, body, [class*="css"] {
 
 /* -- Glassmorphic card -- */
 .email-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(128, 128, 128, 0.05);
+    border: 1px solid rgba(128, 128, 128, 0.15);
     border-radius: 14px;
     padding: 20px 24px;
     margin-bottom: 14px;
@@ -171,19 +157,19 @@ html, body, [class*="css"] {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .email-card:hover {
-    border-color: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 32px rgba(0,0,0,0.35);
+    border-color: rgba(128, 128, 128, 0.25);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
 .card-subject {
     font-size: 15px;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--text-color);
     margin-bottom: 3px;
     line-height: 1.4;
 }
 .card-sender {
     font-size: 12.5px;
-    color: #94a3b8;
+    color: var(--secondary-text-color);
     margin-bottom: 14px;
     font-weight: 400;
 }
@@ -219,11 +205,11 @@ html, body, [class*="css"] {
 .conf-pill {
     font-size: 12px;
     font-weight: 500;
-    color: #94a3b8;
+    color: var(--secondary-text-color);
 }
 .explanation {
     font-size: 13px;
-    color: #94a3b8;
+    color: var(--secondary-text-color);
     line-height: 1.55;
     border-left: 3px solid rgba(99, 102, 241, 0.35);
     padding-left: 10px;
@@ -233,17 +219,17 @@ html, body, [class*="css"] {
     margin-top: 10px;
     padding: 10px;
     border-left: 3px solid #8b5cf6;
-    background: rgba(139, 92, 246, 0.05);
+    background: rgba(139, 92, 246, 0.07);
     border-radius: 0 6px 6px 0;
     font-size: 13px;
     line-height: 1.5;
-    color: #cbd5e1;
+    color: var(--text-color);
 }
 
 /* -- Metric cards -- */
 .metric-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(128, 128, 128, 0.05);
+    border: 1px solid rgba(128, 128, 128, 0.12);
     border-radius: 12px;
     padding: 16px 20px;
     text-align: center;
@@ -251,12 +237,12 @@ html, body, [class*="css"] {
 .metric-value {
     font-size: 32px;
     font-weight: 700;
-    color: #f8fafc;
+    color: var(--text-color);
     line-height: 1.1;
 }
 .metric-label {
     font-size: 11px;
-    color: #94a3b8;
+    color: var(--secondary-text-color);
     margin-top: 4px;
     text-transform: uppercase;
     letter-spacing: 0.6px;
@@ -271,13 +257,13 @@ html, body, [class*="css"] {
 }
 .privacy-note {
     font-size: 12px;
-    color: #64748b;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--secondary-text-color);
+    border-top: 1px solid rgba(128,128,128,0.15);
     padding-top: 16px;
     margin-top: 24px;
     text-align: center;
 }
-hr { border-color: rgba(255,255,255,0.07) !important; margin: 20px 0; }
+hr { border-color: rgba(128,128,128,0.15) !important; margin: 20px 0; }
 </style>
 """, unsafe_allow_html=True)
 
