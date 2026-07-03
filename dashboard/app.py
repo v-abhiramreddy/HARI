@@ -1285,6 +1285,16 @@ def render_settings_tab(is_demo: bool) -> None:
 def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     """Render the full metrics + card dashboard for a scored email DataFrame."""
 
+    # Brand Title Header at the very top of the page
+    st.markdown("""
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; margin-top: -10px;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    <span style="font-size:24px; font-weight:800; color:#ffffff; letter-spacing:0.5px; font-family: 'Outfit', sans-serif;">Inbox Guardian</span>
+</div>
+""", unsafe_allow_html=True)
+
     if is_demo:
         st.markdown(
             f'<div class="demo-banner">{chr(0x26a0)} <strong>Demo mode</strong> - '
