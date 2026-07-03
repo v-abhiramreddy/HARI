@@ -8,29 +8,29 @@ This report evaluates the scoring agent's accuracy and performance on a combined
 
 | Metric | Value | Details |
 | :--- | :--- | :--- |
-| **Total Emails Evaluated** | 37 | Combined mock-data datasets |
-| **True Positives (TP)** | 24 | Phishing/scam correctly flagged |
+| **Total Emails Evaluated** | 38 | Combined mock-data datasets |
+| **True Positives (TP)** | 25 | Phishing/scam correctly flagged |
 | **True Negatives (TN)** | 10 | Safe/spam correctly identified as low risk |
 | **False Positives (FP)** | 0 | Benign emails incorrectly flagged as phishing/scam |
 | **False Negatives (FN)** | 3 | Phishing/scam missed by the filter |
-| **Accuracy** | 91.89% | (34/37) |
-| **Precision** | 100.00% | (24/24) |
-| **Recall** | 88.89% | (24/27) |
-| **F1 Score** | 94.12% | Harmonic mean of precision & recall |
+| **Accuracy** | 92.11% | (35/38) |
+| **Precision** | 100.00% | (25/25) |
+| **Recall** | 89.29% | (25/28) |
+| **F1 Score** | 94.34% | Harmonic mean of precision & recall |
 
 ## Detailed Category Breakdown
 This table shows how individual ground truth categories were classified by the scorer.
 
 | Ground Truth \ Predicted | Phishing | Scam | Spam | Safe |
 | :--- | :---: | :---: | :---: | :---: |
-| **phishing** | 20 | 2 | 0 | 0 |
+| **phishing** | 21 | 2 | 0 | 0 |
 | **borderline_phishing** | 2 | 0 | 3 | 0 |
 | **safe** | 0 | 0 | 0 | 10 |
 
 ## Performance Interpretation
 
 **Strengths**: The scorer performs well at:
-- correctly identifying unambiguous phishing attempts (TP = 24), successfully catching emails with clear threat signals (lookalike domains, SPF/DKIM/DMARC failures, and high-urgency language combined with credential requests).
+- correctly identifying unambiguous phishing attempts (TP = 25), successfully catching emails with clear threat signals (lookalike domains, SPF/DKIM/DMARC failures, and high-urgency language combined with credential requests).
 - correctly classifying legitimate university communications as safe (TN = 10), ensuring standard institutional mail is ignored by the filter.
 - avoiding false alarms entirely (FP = 0), which guarantees that safe emails do not trigger warnings for users.
 
