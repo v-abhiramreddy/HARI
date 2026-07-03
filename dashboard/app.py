@@ -463,14 +463,14 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 
     if is_demo:
         st.markdown(
-            '<div class="demo-banner">Warning <strong>Demo mode</strong> - '
-            'sign in to score your own inbox</div>',
+            f'<div class="demo-banner">{chr(0x26a0)} <strong>Demo mode</strong> - '
+            f'sign in to score your own inbox</div>',
             unsafe_allow_html=True,
         )
 
     # -- Sidebar filters ----                                                
     with st.sidebar:
-        st.markdown("## Shield Inbox Guardian")
+        st.markdown(f"## {chr(0x1f6e1)} Inbox Guardian")
         st.markdown("---")
         st.markdown("### Filters")
 
@@ -507,7 +507,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     ].reset_index(drop=True)
 
     # -- Page header ----                                                    
-    st.markdown("# Shield Inbox Guardian")
+    st.markdown(f"# {chr(0x1f6e1)} Inbox Guardian")
     st.markdown("Real-time phishing, scam, spam, and safety classification for your Gmail inbox.")
     st.markdown("---")
 
@@ -522,7 +522,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     cols    = st.columns(6)
     metrics = [
         ("Total Scanned", total,     "#a78bfa"),
-        ("Warning Phishing",   n_phish,   "#f87171"),
+        (f"{chr(0x26a0)} Phishing",   n_phish,   "#f87171"),
         ("🚨 Scam",       n_scam,    "#fc8181"),
         ("📬 Spam",       n_spam,    "#fb923c"),
         ("✅ Safe",       n_safe,    "#4ade80"),
