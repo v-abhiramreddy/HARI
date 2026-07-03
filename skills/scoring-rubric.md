@@ -12,28 +12,28 @@ The overall risk score is calculated by summing the scores of four categories. E
 | :--- | :---: |
 | **Sender Authenticity** | 30 points |
 | **Link Analysis** | 30 points |
-| **Language and Psychological Pressure** | 20 points |
+| **Language and Psychological Pressure** | 27 points |
 | **Attachment and Content Risk** | 20 points |
-| **Total Maximum Score** | **100 points** |
+| **Total Maximum Score** | **100 points** (Clamped from max 107) |
 
 ### How Signals Combine (Category Capping)
 
 To prevent minor or repetitive triggers from inflating the score, points are awarded non-linearly within each category. The first triggered signal carries the highest weight, and subsequent signals add diminishing points up to the category cap.
 
 #### A. Sender Authenticity (Max 30 pts)
-*   **First signal triggered:** 20 points
+*   **First signal triggered:** 25 points
 *   **Each additional signal:** +10 points
-*   *Example:* If Display Name Mismatch and Failed DMARC both trigger: `20 + 10 = 30 points`.
+*   *Example:* If Display Name Mismatch and Failed DMARC both trigger: `25 + 10 = 35` (capped at **30 points**).
 
 #### B. Link Analysis (Max 30 pts)
-*   **First signal triggered:** 20 points
+*   **First signal triggered:** 25 points
 *   **Each additional signal:** +10 points
-*   *Example:* If Lookalike Domain and Use of URL Shorteners both trigger: `20 + 10 = 30 points`.
+*   *Example:* If Lookalike Domain and Use of URL Shorteners both trigger: `25 + 10 = 35` (capped at **30 points**).
 
-#### C. Language and Psychological Pressure (Max 20 pts)
-*   **First signal triggered:** 12 points
-*   **Each additional signal:** +8 points
-*   *Example:* If both Urgency and Requests for Credentials trigger: `12 + 8 = 20 points`.
+#### C. Language and Psychological Pressure (Max 27 pts)
+*   **First signal triggered:** 15 points
+*   **Each additional signal:** +12 points
+*   *Example:* If both Urgency and Requests for Credentials trigger: `15 + 12 = 27 points`.
 
 #### D. Attachment and Content Risk (Max 20 pts)
 *   **First signal triggered:** 15 points
@@ -85,15 +85,15 @@ An analyst agent processes an email claiming to be from "DocuSign Security".
 
 ### 1. Risk Score Calculation
 *   **Sender Authenticity:**
-    *   *Triggered:* Failed Authentication (SPF/DKIM fail) $\rightarrow$ **20 points**
+    *   *Triggered:* Failed Authentication (SPF/DKIM fail) $\rightarrow$ **25 points**
 *   **Link Analysis:**
-    *   *Triggered:* Use of URL Shorteners $\rightarrow$ **20 points**
+    *   *Triggered:* Use of URL Shorteners $\rightarrow$ **25 points**
 *   **Language and Psychological Pressure:**
-    *   *Triggered:* Urgency and Threats, Requests for Credentials $\rightarrow$ `12 + 8` = **20 points**
+    *   *Triggered:* Urgency and Threats, Requests for Credentials $\rightarrow$ `15 + 12` = **27 points**
 *   **Attachment and Content Risk:**
     *   *Triggered:* None $\rightarrow$ **0 points**
 
-**Total Cumulative Risk Score:** $20 + 20 + 20 + 0 = 60$
+**Total Cumulative Risk Score:** $25 + 25 + 27 + 0 = 77$
 
 ### 2. Confidence Calculation
 *   **Authentication Check:** Successful $\rightarrow$ **0.3**
@@ -104,6 +104,6 @@ An analyst agent processes an email claiming to be from "DocuSign Security".
 **Total Confidence Score:** $0.3 + 0.0 + 0.2 + 0.2 = 0.7$
 
 ### 3. Final Assessment Output
-*   **Risk Score:** `60`
+*   **Risk Score:** `77`
 *   **Risk Band:** `Likely Phishing` (Score is between 51 and 80)
 *   **Confidence:** `0.7` (High completeness, with some link resolution details missing)
