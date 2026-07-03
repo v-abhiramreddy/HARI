@@ -212,6 +212,16 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     padding-left: 10px;
     margin-top: 4px;
 }
+.llm-explanation {
+    margin-top: 10px;
+    padding: 10px;
+    border-left: 3px solid #8b5cf6;
+    background: rgba(139, 92, 246, 0.05);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #cbd5e1;
+}
 
 /* ── Metric cards ── */
 .metric-card {
@@ -627,14 +637,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             llm_exp = ""
             if "llm_explanation" in row and pd.notna(row["llm_explanation"]) and row["llm_explanation"]:
                 llm_exp = f"""
-                <div class="llm-explanation" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    border-left: 3px solid #8b5cf6;
-                    background: rgba(139, 92, 246, 0.05);
-                    border-radius: 0 6px 6px 0;
-                    font-size: 13px;
-                ">
+                <div class="llm-explanation">
                     🤖 <b>AI Analysis (Gemini):</b> {_html.escape(str(row['llm_explanation']))}
                 </div>
                 """
