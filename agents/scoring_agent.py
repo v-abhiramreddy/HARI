@@ -134,6 +134,28 @@ def score_email(email: dict) -> dict:
     sender_local = sender_parts[0] if len(sender_parts) > 1 else ""
     sender_domain = clean_domain(sender_parts[1]) if len(sender_parts) > 1 else ""
 
+    # Short-circuit: If the email is from a verified legitimate brand (passing SPF, DKIM, and DMARC)
+    # we know for a fact it is authentic and should be marked safe immediately.
+    spf = headers.get("spf", "").lower()
+    dkim = headers.get("dkim", "").lower()
+    dmarc = headers.get("dmarc", "").lower()
+    
+    is_verified_brand = False
+    for brand, legit in LEGITIMATE_DOMAINS.items():
+        if is_subdomain_of(sender_domain, legit):
+            if spf == "pass" and dkim == "pass" and dmarc == "pass":
+                is_verified_brand = True
+                break
+                
+    if is_verified_brand:
+        return {
+            "email_id": email_id,
+            "score": 0,
+            "category": "safe",
+            "confidence": 1.0,
+            "explanation": f"Verified authentic email from {sender_domain} (SPF/DKIM/DMARC passed)."
+        }
+
     # Keep track of triggered signals
     signals_sender = []
     signals_links = []
