@@ -114,14 +114,20 @@ html, body, [class*="css"] {
     padding: 10px 14px;
     border-radius: 8px;
     font-size: 13.5px;
-    color: #94a3b8;
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    transition: background 0.2s, color 0.2s;
 }
 .nav-item.active {
-    background: rgba(14, 165, 233, 0.12);
-    color: #38bdf8;
-    font-weight: 600;
-    border-left: 3px solid #38bdf8;
-    border-radius: 0 8px 8px 0;
+    background: rgba(14, 165, 233, 0.12) !important;
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #38bdf8 !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+.nav-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #e2e8f0 !important;
 }
 .sidebar-profile {
     display: flex;
@@ -204,6 +210,62 @@ html, body, [class*="css"] {
     margin-top: 6px !important;
     text-transform: none !important;
     letter-spacing: 0px !important;
+}
+
+/* -- Glassmorphic card (Dashboard list) -- */
+.email-card {
+    background: rgba(10, 20, 36, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(10px);
+}
+.email-card:hover {
+    border-color: rgba(56, 189, 248, 0.2);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+.card-subject {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 3px;
+    line-height: 1.4;
+}
+.card-sender {
+    font-size: 12.5px;
+    color: #94a3b8;
+    margin-bottom: 14px;
+    font-weight: 400;
+}
+.score-pill {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 11px;
+    border-radius: 20px;
+    background: rgba(139,92,246,0.18);
+    color: #a78bfa;
+    border: 1px solid rgba(139,92,246,0.35);
+}
+.conf-pill {
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+}
+.explanation {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.55;
+    border-left: 3px solid rgba(99, 102, 241, 0.35);
+    padding-left: 10px;
+    margin-top: 6px;
+}
+.meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 /* -- Email card (Master list) -- */
@@ -751,6 +813,19 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             unsafe_allow_html=True,
         )
 
+    # Determine active tab from URL query parameters (or default to Dashboard)
+    active_tab = st.query_params.get("tab", "Dashboard")
+    
+    # URL parameter helpers
+    demo_param = "?demo=1" if is_demo else ""
+    tab_prefix = "&" if demo_param else "?"
+    
+    db_url = f"{demo_param}{tab_prefix}tab=Dashboard"
+    ea_url = f"{demo_param}{tab_prefix}tab=Analysis"
+    
+    db_active = "active" if active_tab == "Dashboard" else ""
+    ea_active = "active" if active_tab == "Analysis" else ""
+
     # -- Sidebar custom navigation and filters ----                                                
     with st.sidebar:
         st.markdown(f"""
@@ -759,14 +834,14 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             <span class="sidebar-logo-text">INBOX GUARDIAN</span>
         </div>
         <div class="sidebar-nav">
-            <div class="nav-item active">📊 Dashboard</div>
-            <div class="nav-item">✉️ Email Analysis</div>
-            <div class="nav-item">⚠️ Threat Intel</div>
-            <div class="nav-item">🔗 Link Scanner</div>
-            <div class="nav-item">💀 Scam Detector</div>
-            <div class="nav-item">👥 User Reports</div>
-            <div class="nav-item">📈 Analytics</div>
-            <div class="nav-item">⚙️ Settings</div>
+            <a href="{db_url}" target="_self" class="nav-item {db_active}">📊 Dashboard</a>
+            <a href="{ea_url}" target="_self" class="nav-item {ea_active}">✉️ Email Analysis</a>
+            <a href="#" class="nav-item">⚠️ Threat Intel</a>
+            <a href="#" class="nav-item">🔗 Link Scanner</a>
+            <a href="#" class="nav-item">💀 Scam Detector</a>
+            <a href="#" class="nav-item">👥 User Reports</a>
+            <a href="#" class="nav-item">📈 Analytics</a>
+            <a href="#" class="nav-item">⚙️ Settings</a>
         </div>
         """, unsafe_allow_html=True)
         
@@ -912,198 +987,239 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 
     st.markdown("---")
 
-    # -- Analytics Section ----                                              
-    with st.expander("📊 View Inbox Analytics & Risk Trends", expanded=False):
-        chart_col1, chart_col2 = st.columns(2)
-        with chart_col1:
-            st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Category Distribution</p>", unsafe_allow_html=True)
-            if not filtered.empty:
-                import plotly.graph_objects as go
-                cat_counts = filtered["category"].value_counts().reindex(["safe", "spam", "scam", "phishing"], fill_value=0)
-                
-                # Brand matching colors (green, orange, light-red, deep-red)
-                colors = ["#4ade80", "#fb923c", "#fc8181", "#f87171"]
-                
-                fig = go.Figure(data=[go.Bar(
-                    x=["Safe", "Spam", "Scam", "Phishing"],
-                    y=cat_counts.values,
-                    marker_color=colors,
-                    text=cat_counts.values,
-                    textposition='auto',
-                    hovertemplate='%{x}: %{y} emails<extra></extra>'
-                )])
-                
-                fig.update_layout(
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    margin=dict(l=10, r=10, t=10, b=10),
-                    height=260,
-                    font=dict(color='#94a3b8', family='Inter, sans-serif'),
-                    yaxis=dict(
-                        gridcolor='rgba(255,255,255,0.05)',
-                        zeroline=False,
-                        tickfont=dict(color='#64748b')
-                    ),
-                    xaxis=dict(
-                        tickfont=dict(color='#94a3b8')
+    if active_tab == "Dashboard":
+        # -- Analytics Section ----                                              
+        with st.expander("📊 View Inbox Analytics & Risk Trends", expanded=False):
+            chart_col1, chart_col2 = st.columns(2)
+            with chart_col1:
+                st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Category Distribution</p>", unsafe_allow_html=True)
+                if not filtered.empty:
+                    import plotly.graph_objects as go
+                    cat_counts = filtered["category"].value_counts().reindex(["safe", "spam", "scam", "phishing"], fill_value=0)
+                    
+                    # Brand matching colors (green, orange, light-red, deep-red)
+                    colors = ["#4ade80", "#fb923c", "#fc8181", "#f87171"]
+                    
+                    fig = go.Figure(data=[go.Bar(
+                        x=["Safe", "Spam", "Scam", "Phishing"],
+                        y=cat_counts.values,
+                        marker_color=colors,
+                        text=cat_counts.values,
+                        textposition='auto',
+                        hovertemplate='%{x}: %{y} emails<extra></extra>'
+                    )])
+                    
+                    fig.update_layout(
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        height=260,
+                        font=dict(color='#94a3b8', family='Inter, sans-serif'),
+                        yaxis=dict(
+                            gridcolor='rgba(255,255,255,0.05)',
+                            zeroline=False,
+                            tickfont=dict(color='#64748b')
+                        ),
+                        xaxis=dict(
+                            tickfont=dict(color='#94a3b8')
+                        )
                     )
-                )
-                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-            else:
-                st.info("No data available to plot.")
-            
-        with chart_col2:
-            st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Score Spectrum</p>", unsafe_allow_html=True)
-            if not filtered.empty:
-                import plotly.graph_objects as go
-                score_bins = pd.cut(filtered["score"], bins=[-1, 20, 50, 80, 100], labels=["0-20 (Safe)", "21-50 (Low/Spam)", "51-80 (Likely Phish)", "81-100 (High Phish)"])
-                score_counts = score_bins.value_counts().sort_index()
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                else:
+                    st.info("No data available to plot.")
                 
-                # Graduated risk spectrum colors
-                colors = ["#4ade80", "#fb923c", "#f87171", "#ef4444"]
-                
-                fig = go.Figure(data=[go.Bar(
-                    x=list(score_counts.index),
-                    y=score_counts.values,
-                    marker_color=colors,
-                    text=score_counts.values,
-                    textposition='auto',
-                    hovertemplate='%{x}: %{y} emails<extra></extra>'
-                )])
-                
-                fig.update_layout(
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    margin=dict(l=10, r=10, t=10, b=10),
-                    height=260,
-                    font=dict(color='#94a3b8', family='Inter, sans-serif'),
-                    yaxis=dict(
-                        gridcolor='rgba(255,255,255,0.05)',
-                        zeroline=False,
-                        tickfont=dict(color='#64748b')
-                    ),
-                    xaxis=dict(
-                        tickfont=dict(color='#94a3b8')
+            with chart_col2:
+                st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Score Spectrum</p>", unsafe_allow_html=True)
+                if not filtered.empty:
+                    import plotly.graph_objects as go
+                    score_bins = pd.cut(filtered["score"], bins=[-1, 20, 50, 80, 100], labels=["0-20 (Safe)", "21-50 (Low/Spam)", "51-80 (Likely Phish)", "81-100 (High Phish)"])
+                    score_counts = score_bins.value_counts().sort_index()
+                    
+                    # Graduated risk spectrum colors
+                    colors = ["#4ade80", "#fb923c", "#f87171", "#ef4444"]
+                    
+                    fig = go.Figure(data=[go.Bar(
+                        x=list(score_counts.index),
+                        y=score_counts.values,
+                        marker_color=colors,
+                        text=score_counts.values,
+                        textposition='auto',
+                        hovertemplate='%{x}: %{y} emails<extra></extra>'
+                    )])
+                    
+                    fig.update_layout(
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        height=260,
+                        font=dict(color='#94a3b8', family='Inter, sans-serif'),
+                        yaxis=dict(
+                            gridcolor='rgba(255,255,255,0.05)',
+                            zeroline=False,
+                            tickfont=dict(color='#64748b')
+                        ),
+                        xaxis=dict(
+                            tickfont=dict(color='#94a3b8')
+                        )
                     )
-                )
-                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-            else:
-                st.info("No data available to plot.")
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                else:
+                    st.info("No data available to plot.")
 
-    st.markdown("---")
+        st.markdown("---")
 
-    # -- Master-Detail Explorer Pane ----                                    
-    master_col, detail_col = st.columns([2, 3])
-    
-    with master_col:
-        st.markdown("<p style='font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;'>Inbox Explorer</p>", unsafe_allow_html=True)
-        
-        # Searchable selectbox
-        if not filtered.empty:
-            selected_idx = st.selectbox(
-                "Select email to inspect",
-                range(len(filtered)),
-                format_func=lambda i: f"{filtered.loc[i, 'category'].upper()} | {filtered.loc[i, 'subject'][:30]}...",
-                key="selected_email_idx"
-            )
+        # -- Results count ----                                                  
+        extra = "  ·  filtered" if len(filtered) < total else ""
+        st.markdown(
+            f"<div class='section-header'>Showing {len(filtered)} of {total} emails{extra}</div>",
+            unsafe_allow_html=True,
+        )
+
+        # -- Email cards ----                                                    
+        if filtered.empty:
+            st.info("No emails match the current filters.")
         else:
-            selected_idx = None
-            st.info("No emails match current filters.")
-            
-        st.markdown("<div style='margin-bottom:14px;'></div>", unsafe_allow_html=True)
-        
-        # Vertical list of emails showing overview
-        if not filtered.empty:
-            for idx, row in filtered.iterrows():
-                is_active = (idx == selected_idx)
-                active_class = "active" if is_active else ""
-                
-                cat = row["category"]
-                cat_badge = f'<span class="badge badge-{cat}" style="font-size:9px; padding:1px 6px;">{cat}</span>'
-                
+            for _, row in filtered.iterrows():
+                conf_pct = int(row["confidence"] * 100)
+                s_color  = _score_color(row["score"])
+                eid      = row.get("email_id", "-")
+
+                # Format the LLM explanation if available
+                llm_exp = ""
+                if "llm_explanation" in row and pd.notna(row["llm_explanation"]) and row["llm_explanation"]:
+                    llm_exp = (
+                        f'<div class="llm-explanation">'
+                        f'{chr(0x1f916)} <b>AI Analysis (Gemini):</b> {_html.escape(str(row["llm_explanation"]))}'
+                        f'</div>'
+                    )
+
                 st.markdown(f"""
-                <div class="master-card {active_class}">
-                    <div class="master-subject">{_html.escape(str(row['subject']))}</div>
-                    <div class="master-meta">
-                        <span>{_html.escape(str(row['sender'][:25]))}...</span>
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="color:{_score_color(row['score'])}; font-weight:700;">{row['score']}</span>
-                            {cat_badge}
-                        </div>
+                <div class="email-card">
+                    <div class="card-subject">{_html.escape(str(row['subject']))}</div>
+                    <div class="card-sender">{chr(0x2709)} {_html.escape(str(row['sender']))}</div>
+                    <div class="meta-row">
+                        {_badge(row['category'])}
+                        <span class="score-pill">Score: <span style="color:{s_color}">{row['score']}</span> / 100</span>
+                        <span class="conf-pill">Confidence: {conf_pct}%</span>
+                        <span class="conf-pill" style="color:#475569; font-size:11px;">#{_html.escape(str(eid))}</span>
                     </div>
+                    <div class="explanation">{chr(0x1f50d)} {_html.escape(str(row['explanation']))}</div>{llm_exp}
                 </div>
                 """, unsafe_allow_html=True)
-                
-    with detail_col:
-        st.markdown("<p style='font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;'>Signal Analysis Inspector</p>", unsafe_allow_html=True)
+
+    elif active_tab == "Analysis":
+        # -- Master-Detail Explorer Pane ----                                    
+        master_col, detail_col = st.columns([2, 3])
         
-        if selected_idx is not None and selected_idx < len(filtered):
-            row = filtered.iloc[selected_idx]
-            display_name = _extract_display_name(row["sender"])
-            cat = row["category"]
-            cat_pill = f'<span class="badge badge-{cat}" style="font-size:10px; border-radius:4px;">{cat.upper()}</span>'
+        with master_col:
+            st.markdown("<p style='font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;'>Inbox Explorer</p>", unsafe_allow_html=True)
             
-            llm_analysis_html = ""
-            if "llm_explanation" in row and pd.notna(row["llm_explanation"]) and row["llm_explanation"]:
-                llm_analysis_html = (
-                    f'<div class="llm-explanation">'
-                    f'<b>{chr(0x1f916)} AI Threat Analysis (Gemini):</b><br>'
-                    f'{_html.escape(str(row["llm_explanation"]))}'
-                    f'</div>'
+            # Searchable selectbox
+            if not filtered.empty:
+                selected_idx = st.selectbox(
+                    "Select email to inspect",
+                    range(len(filtered)),
+                    format_func=lambda i: f"{filtered.loc[i, 'category'].upper()} | {filtered.loc[i, 'subject'][:30]}...",
+                    key="selected_email_idx"
                 )
+            else:
+                selected_idx = None
+                st.info("No emails match current filters.")
                 
-            st.markdown(f"""
-            <div class="detail-card">
-                <div class="detail-header">
-                    <div class="detail-title">
-                        <span style="font-size:16px;">{chr(0x2709)}</span>
-                        <span class="detail-title-text">Email Analysis</span>
-                        {cat_pill}
+            st.markdown("<div style='margin-bottom:14px;'></div>", unsafe_allow_html=True)
+            
+            # Vertical list of emails showing overview
+            if not filtered.empty:
+                for idx, row in filtered.iterrows():
+                    is_active = (idx == selected_idx)
+                    active_class = "active" if is_active else ""
+                    
+                    cat = row["category"]
+                    cat_badge = f'<span class="badge badge-{cat}" style="font-size:9px; padding:1px 6px;">{cat}</span>'
+                    
+                    st.markdown(f"""
+                    <div class="master-card {active_class}">
+                        <div class="master-subject">{_html.escape(str(row['subject']))}</div>
+                        <div class="master-meta">
+                            <span>{_html.escape(str(row['sender'][:25]))}...</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="color:{_score_color(row['score'])}; font-weight:700;">{row['score']}</span>
+                                {cat_badge}
+                            </div>
+                        </div>
                     </div>
-                    <div class="detail-actions">
-                        <span>{chr(0x1f441)}</span>
-                        <span>{chr(0x1f517)}</span>
+                    """, unsafe_allow_html=True)
+                    
+        with detail_col:
+            st.markdown("<p style='font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;'>Signal Analysis Inspector</p>", unsafe_allow_html=True)
+            
+            if selected_idx is not None and selected_idx < len(filtered):
+                row = filtered.iloc[selected_idx]
+                display_name = _extract_display_name(row["sender"])
+                cat = row["category"]
+                cat_pill = f'<span class="badge badge-{cat}" style="font-size:10px; border-radius:4px;">{cat.upper()}</span>'
+                
+                llm_analysis_html = ""
+                if "llm_explanation" in row and pd.notna(row["llm_explanation"]) and row["llm_explanation"]:
+                    llm_analysis_html = (
+                        f'<div class="llm-explanation">'
+                        f'<b>{chr(0x1f916)} AI Threat Analysis (Gemini):</b><br>'
+                        f'{_html.escape(str(row["llm_explanation"]))}'
+                        f'</div>'
+                    )
+                    
+                st.markdown(f"""
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <span style="font-size:16px;">{chr(0x2709)}</span>
+                            <span class="detail-title-text">Email Analysis</span>
+                            {cat_pill}
+                        </div>
+                        <div class="detail-actions">
+                            <span>{chr(0x1f441)}</span>
+                            <span>{chr(0x1f517)}</span>
+                        </div>
                     </div>
+                    
+                    <div class="detail-tabs">
+                        <span class="detail-tab active">Phishing Signals</span>
+                        <span class="detail-tab">Link Analysis</span>
+                        <span class="detail-tab">Scam Signals</span>
+                    </div>
+                    
+                    <div class="metadata-grid">
+                        <div class="meta-item">
+                            <span class="meta-label">From:</span>
+                            <span class="meta-val">{_html.escape(str(row['sender']))}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Display Name:</span>
+                            <span class="meta-val">{_html.escape(display_name)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">To:</span>
+                            <span class="meta-val">sarah.chen@company.com</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Received:</span>
+                            <span class="meta-val">2026-07-03 09:42:07 UTC</span>
+                        </div>
+                        <div class="meta-item full-width">
+                            <span class="meta-label">Subject:</span>
+                            <span class="subject-val">{_html.escape(str(row['subject']))}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="signals-list">
+                        {_generate_checklist_html(row)}
+                    </div>
+                    
+                    {llm_analysis_html}
                 </div>
-                
-                <div class="detail-tabs">
-                    <span class="detail-tab active">Phishing Signals</span>
-                    <span class="detail-tab">Link Analysis</span>
-                    <span class="detail-tab">Scam Signals</span>
-                </div>
-                
-                <div class="metadata-grid">
-                    <div class="meta-item">
-                        <span class="meta-label">From:</span>
-                        <span class="meta-val">{_html.escape(str(row['sender']))}</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Display Name:</span>
-                        <span class="meta-val">{_html.escape(display_name)}</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">To:</span>
-                        <span class="meta-val">sarah.chen@company.com</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Received:</span>
-                        <span class="meta-val">2026-07-03 09:42:07 UTC</span>
-                    </div>
-                    <div class="meta-item full-width">
-                        <span class="meta-label">Subject:</span>
-                        <span class="subject-val">{_html.escape(str(row['subject']))}</span>
-                    </div>
-                </div>
-                
-                <div class="signals-list">
-                    {_generate_checklist_html(row)}
-                </div>
-                
-                {llm_analysis_html}
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.info("Select an email from the list to inspect.")
+                """, unsafe_allow_html=True)
+            else:
+                st.info("Select an email from the list to inspect.")
 
     # -- Raw data expander ----                                              
     st.markdown("---")
