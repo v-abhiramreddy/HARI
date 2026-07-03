@@ -888,63 +888,63 @@ def _generate_checklist_html(row: dict) -> str:
 def render_threat_intel() -> None:
     st.markdown("""
 <div class="detail-card">
-    <h3 style="margin-top:0; color:#38bdf8;">🛡️ Threat Intelligence Database</h3>
-    <p style="font-size:13.5px; color:#94a3b8; line-height:1.6;">
-        Inbox Guardian matches incoming headers and content against local threat databases to identify lookalike spoofing and recruitment fraud campaigns targeted at Indian students.
-    </p>
-    
-    <hr>
-    
-    <h4 style="color:#ffffff; margin-bottom:12px;">🏢 Monitored Brand Domains (Indian Corporates & Portals)</h4>
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Infosys Ltd.</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">infosys.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Wipro Technologies</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">wipro.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Tata Consultancy (TCS)</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">tcs.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">HCL Technologies</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">hcltech.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Accenture India</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">accenture.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Naukri Jobs Portal</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">naukri.com</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
-            <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Internshala Portal</div>
-            <div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">internshala.com</div>
-        </div>
-    </div>
-    
-    <h4 style="color:#ffffff; margin-bottom:12px;">🚨 High-Risk Urgency Keywords (Student Scam Heuristics)</h4>
-    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
-        <span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">training fee</span>
-        <span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">joining fee</span>
-        <span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">registration fee</span>
-        <span style="background:rgba(251, 146, 60, 0.12); color:#fb923c; border:1px solid rgba(251, 146, 60, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">security deposit</span>
-        <span style="background:rgba(251, 146, 60, 0.12); color:#fb923c; border:1px solid rgba(251, 146, 60, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">refundable deposit</span>
-        <span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">work from home</span>
-        <span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">immediate joining</span>
-        <span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">offer letter attached</span>
-    </div>
-    
-    <h4 style="color:#ffffff; margin-bottom:12px;">🛡️ Email Authentication Baseline Requirements</h4>
-    <p style="font-size:13px; color:#94a3b8; line-height:1.5; margin-bottom:14px;">
-        Legitimate brand communication must pass cryptographic SPF (Sender Policy Framework), DKIM (DomainKeys Identified Mail), and DMARC alignment checks. Any mismatch or failure results in an immediate safety alert score increase.
-    </p>
+<h3 style="margin-top:0; color:#38bdf8;">🛡️ Threat Intelligence Database</h3>
+<p style="font-size:13.5px; color:#94a3b8; line-height:1.6;">
+Inbox Guardian matches incoming headers and content against local threat databases to identify lookalike spoofing and recruitment fraud campaigns targeted at Indian students.
+</p>
+
+<hr>
+
+<h4 style="color:#ffffff; margin-bottom:12px;">🏢 Monitored Brand Domains (Indian Corporates & Portals)</h4>
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Infosys Ltd.</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">infosys.com</div>
 </div>
-""")
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Wipro Technologies</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">wipro.com</div>
+</div>
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Tata Consultancy (TCS)</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">tcs.com</div>
+</div>
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">HCL Technologies</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">hcltech.com</div>
+</div>
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Accenture India</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">accenture.com</div>
+</div>
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Naukri Jobs Portal</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">naukri.com</div>
+</div>
+<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
+<div style="font-weight:600; color:#e2e8f0; font-size:13px;">Internshala Portal</div>
+<div style="font-size:11px; color:#38bdf8; font-family:monospace; margin-top:4px;">internshala.com</div>
+</div>
+</div>
+
+<h4 style="color:#ffffff; margin-bottom:12px;">🚨 High-Risk Urgency Keywords (Student Scam Heuristics)</h4>
+<div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
+<span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">training fee</span>
+<span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">joining fee</span>
+<span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">registration fee</span>
+<span style="background:rgba(251, 146, 60, 0.12); color:#fb923c; border:1px solid rgba(251, 146, 60, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">security deposit</span>
+<span style="background:rgba(251, 146, 60, 0.12); color:#fb923c; border:1px solid rgba(251, 146, 60, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">refundable deposit</span>
+<span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">work from home</span>
+<span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">immediate joining</span>
+<span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">offer letter attached</span>
+</div>
+
+<h4 style="color:#ffffff; margin-bottom:12px;">🛡️ Email Authentication Baseline Requirements</h4>
+<p style="font-size:13px; color:#94a3b8; line-height:1.5; margin-bottom:14px;">
+Monitored brand communication must pass cryptographic SPF (Sender Policy Framework), DKIM (DomainKeys Identified Mail), and DMARC alignment checks. Any mismatch or failure results in an immediate safety alert score increase.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 
 def render_link_scanner() -> None:
@@ -978,20 +978,20 @@ def render_link_scanner() -> None:
         if lookalike_found:
             st.markdown(f"""
 <div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25); border-radius:12px; padding:20px; text-align:center;">
-    <span style="font-size:24px;">🚨</span>
-    <h4 style="color:#f87171; margin:8px 0 4px 0;">Malicious Link Flagged</h4>
-    <p style="font-size:13.5px; color:#cbd5e1; margin-bottom:12px;">This domain is a suspected lookalike impersonator targeting <strong>{detected_brand.upper()}</strong></p>
-    <div style="font-family:monospace; background:rgba(0,0,0,0.2); padding:10px; border-radius:6px; font-size:12.5px; color:#f87171; display:inline-block; border:1px solid rgba(255,255,255,0.02);">
-        {domain} &nbsp; ⟷ &nbsp; Official Brand: {LEGITIMATE_DOMAINS[detected_brand]}
-    </div>
+<span style="font-size:24px;">🚨</span>
+<h4 style="color:#f87171; margin:8px 0 4px 0;">Malicious Link Flagged</h4>
+<p style="font-size:13.5px; color:#cbd5e1; margin-bottom:12px;">This domain is a suspected lookalike impersonator targeting <strong>{detected_brand.upper()}</strong></p>
+<div style="font-family:monospace; background:rgba(0,0,0,0.2); padding:10px; border-radius:6px; font-size:12.5px; color:#f87171; display:inline-block; border:1px solid rgba(255,255,255,0.02);">
+{domain} &nbsp; ⟷ &nbsp; Official Brand: {LEGITIMATE_DOMAINS[detected_brand]}
+</div>
 </div>
 """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
 <div style="background:rgba(34, 197, 94, 0.08); border:1px solid rgba(34, 197, 94, 0.25); border-radius:12px; padding:20px; text-align:center;">
-    <span style="font-size:24px;">✅</span>
-    <h4 style="color:#4ade80; margin:8px 0 4px 0;">No Lookalike Brand Impersonation Found</h4>
-    <p style="font-size:13.5px; color:#cbd5e1; margin-bottom:0;">The domain <strong>{domain}</strong> does not match lookalike patterns of monitored Indian brands.</p>
+<span style="font-size:24px;">✅</span>
+<h4 style="color:#4ade80; margin:8px 0 4px 0;">No Lookalike Brand Impersonation Found</h4>
+<p style="font-size:13.5px; color:#cbd5e1; margin-bottom:0;">The domain <strong>{domain}</strong> does not match lookalike patterns of monitored Indian brands.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1034,31 +1034,31 @@ def render_scam_detector() -> None:
         st.markdown("<div style='margin-bottom:20px;'></div>", unsafe_allow_html=True)
         st.markdown(f"""
 <div class="detail-card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-        <h4 style="margin:0; color:#ffffff;">Analysis Results</h4>
-        <span class="badge badge-{cat}" style="font-size:11px;">{cat.upper()}</span>
-    </div>
-    
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
-        <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:10px; text-align:center;">
-            <div style="font-size:11px; color:#64748b; text-transform:uppercase;">Threat Score</div>
-            <div style="font-size:32px; font-weight:700; color:{s_color}; margin-top:4px;">{score}</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:10px; text-align:center;">
-            <div style="font-size:11px; color:#64748b; text-transform:uppercase;">Confidence Level</div>
-            <div style="font-size:32px; font-weight:700; color:#38bdf8; margin-top:4px;">{conf}%</div>
-        </div>
-    </div>
-    
-    <h5 style="color:#ffffff; margin-bottom:8px; font-size:13.5px;">Detected Signal Indicators</h5>
-    <div class="signals-list">
-        {_generate_checklist_html(res)}
-    </div>
-    
-    <div class="llm-explanation" style="margin-top:14px;">
-        <strong>📋 Heuristic Explanation:</strong><br>
-        {res['explanation']}
-    </div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+<h4 style="margin:0; color:#ffffff;">Analysis Results</h4>
+<span class="badge badge-{cat}" style="font-size:11px;">{cat.upper()}</span>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:10px; text-align:center;">
+<div style="font-size:11px; color:#64748b; text-transform:uppercase;">Threat Score</div>
+<div style="font-size:32px; font-weight:700; color:{s_color}; margin-top:4px;">{score}</div>
+</div>
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:10px; text-align:center;">
+<div style="font-size:11px; color:#64748b; text-transform:uppercase;">Confidence Level</div>
+<div style="font-size:32px; font-weight:700; color:#38bdf8; margin-top:4px;">{conf}%</div>
+</div>
+</div>
+
+<h5 style="color:#ffffff; margin-bottom:8px; font-size:13.5px;">Detected Signal Indicators</h5>
+<div class="signals-list">
+{_generate_checklist_html(res)}
+</div>
+
+<div class="llm-explanation" style="margin-top:14px;">
+<strong>📋 Heuristic Explanation:</strong><br>
+{res['explanation']}
+</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1089,14 +1089,14 @@ def render_user_reports() -> None:
         badge = f'<span class="badge badge-{"phishing" if r["risk"] == "critical" else "scam"}" style="font-size:10px;">{r["risk"].upper()}</span>'
         st.markdown(f"""
 <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); border-radius:10px; padding:16px; margin-bottom:10px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <strong style="font-size:14px; color:#e2e8f0;">{r['title']}</strong>
-        {badge}
-    </div>
-    <div style="display:flex; justify-content:space-between; font-size:11.5px; color:#64748b;">
-        <span>Target: {r['target']}</span>
-        <span>Campaign Volume: {r['volume']}</span>
-    </div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+<strong style="font-size:14px; color:#e2e8f0;">{r['title']}</strong>
+{badge}
+</div>
+<div style="display:flex; justify-content:space-between; font-size:11.5px; color:#64748b;">
+<span>Target: {r['target']}</span>
+<span>Campaign Volume: {r['volume']}</span>
+</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1162,22 +1162,22 @@ def render_analytics_tab(df: pd.DataFrame, filtered: pd.DataFrame) -> None:
     st.markdown("<h4 style='color:#ffffff; margin-bottom:12px;'>📈 Binary Classification Performance</h4>", unsafe_allow_html=True)
     st.markdown("""
 <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;">
-    <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
-        <div style="font-size:10px; color:#64748b; text-transform:uppercase;">Accuracy</div>
-        <div style="font-size:24px; font-weight:700; color:#4ade80; margin-top:4px;">100%</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
-        <div style="font-size:10px; color:#64748b; text-transform:uppercase;">Precision</div>
-        <div style="font-size:24px; font-weight:700; color:#38bdf8; margin-top:4px;">1.0000</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
-        <div style="font-size:10px; color:#64748b; text-transform:uppercase;">Recall</div>
-        <div style="font-size:24px; font-weight:700; color:#fb923c; margin-top:4px;">1.0000</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
-        <div style="font-size:10px; color:#64748b; text-transform:uppercase;">F1 Score</div>
-        <div style="font-size:24px; font-weight:700; color:#a78bfa; margin-top:4px;">1.0000</div>
-    </div>
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
+<div style="font-size:10px; color:#64748b; text-transform:uppercase;">Accuracy</div>
+<div style="font-size:24px; font-weight:700; color:#4ade80; margin-top:4px;">100%</div>
+</div>
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
+<div style="font-size:10px; color:#64748b; text-transform:uppercase;">Precision</div>
+<div style="font-size:24px; font-weight:700; color:#38bdf8; margin-top:4px;">1.0000</div>
+</div>
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
+<div style="font-size:10px; color:#64748b; text-transform:uppercase;">Recall</div>
+<div style="font-size:24px; font-weight:700; color:#fb923c; margin-top:4px;">1.0000</div>
+</div>
+<div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:16px; border-radius:10px; text-align:center;">
+<div style="font-size:10px; color:#64748b; text-transform:uppercase;">F1 Score</div>
+<div style="font-size:24px; font-weight:700; color:#a78bfa; margin-top:4px;">1.0000</div>
+</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1198,9 +1198,9 @@ def render_settings_tab(is_demo: bool) -> None:
     st.markdown("<h4 style='color:#ffffff; margin-bottom:12px;'>📊 Session Information</h4>", unsafe_allow_html=True)
     st.markdown(f"""
 <div style="font-size:13px; color:#94a3b8; line-height:1.6;">
-    <strong>Mode:</strong> {"Demo Mode" if is_demo else "Authenticated Live Mode"}<br>
-    <strong>Verification Status:</strong> Pipelines Verified (17/17 tests passing)<br>
-    <strong>Scoring Model:</strong> Gemini 2.5 Pro (Fallback: Flash)<br>
+<strong>Mode:</strong> {"Demo Mode" if is_demo else "Authenticated Live Mode"}<br>
+<strong>Verification Status:</strong> Pipelines Verified (17/17 tests passing)<br>
+<strong>Scoring Model:</strong> Gemini 2.5 Pro (Fallback: Flash)<br>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1224,28 +1224,40 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     
     db_url = f"{demo_param}{tab_prefix}tab=Dashboard"
     ea_url = f"{demo_param}{tab_prefix}tab=Analysis"
+    ti_url = f"{demo_param}{tab_prefix}tab=ThreatIntel"
+    ls_url = f"{demo_param}{tab_prefix}tab=LinkScanner"
+    sd_url = f"{demo_param}{tab_prefix}tab=ScamDetector"
+    ur_url = f"{demo_param}{tab_prefix}tab=UserReports"
+    an_url = f"{demo_param}{tab_prefix}tab=Analytics"
+    se_url = f"{demo_param}{tab_prefix}tab=Settings"
     
     db_active = "active" if active_tab == "Dashboard" else ""
     ea_active = "active" if active_tab == "Analysis" else ""
+    ti_active = "active" if active_tab == "ThreatIntel" else ""
+    ls_active = "active" if active_tab == "LinkScanner" else ""
+    sd_active = "active" if active_tab == "ScamDetector" else ""
+    ur_active = "active" if active_tab == "UserReports" else ""
+    an_active = "active" if active_tab == "Analytics" else ""
+    se_active = "active" if active_tab == "Settings" else ""
 
     # -- Sidebar custom navigation and filters ----                                                
     with st.sidebar:
         st.markdown(f"""
-        <div class="sidebar-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span class="sidebar-logo-text">INBOX GUARDIAN</span>
-        </div>
-        <div class="sidebar-nav">
-            <a href="{db_url}" target="_self" class="nav-item {db_active}">📊 Dashboard</a>
-            <a href="{ea_url}" target="_self" class="nav-item {ea_active}">✉️ Email Analysis</a>
-            <a href="#" class="nav-item">⚠️ Threat Intel</a>
-            <a href="#" class="nav-item">🔗 Link Scanner</a>
-            <a href="#" class="nav-item">💀 Scam Detector</a>
-            <a href="#" class="nav-item">👥 User Reports</a>
-            <a href="#" class="nav-item">📈 Analytics</a>
-            <a href="#" class="nav-item">⚙️ Settings</a>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="sidebar-logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span class="sidebar-logo-text">INBOX GUARDIAN</span>
+</div>
+<div class="sidebar-nav">
+    <a href="{db_url}" target="_self" class="nav-item {db_active}">📊 Dashboard</a>
+    <a href="{ea_url}" target="_self" class="nav-item {ea_active}">✉️ Email Analysis</a>
+    <a href="{ti_url}" target="_self" class="nav-item {ti_active}">⚠️ Threat Intel</a>
+    <a href="{ls_url}" target="_self" class="nav-item {ls_active}">🔗 Link Scanner</a>
+    <a href="{sd_url}" target="_self" class="nav-item {sd_active}">💀 Scam Detector</a>
+    <a href="{ur_url}" target="_self" class="nav-item {ur_active}">👥 User Reports</a>
+    <a href="{an_url}" target="_self" class="nav-item {an_active}">📈 Analytics</a>
+    <a href="{se_url}" target="_self" class="nav-item {se_active}">⚙️ Settings</a>
+</div>
+""", unsafe_allow_html=True)
         
         st.markdown("---")
         st.markdown("### Filters")
@@ -1282,14 +1294,14 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             profile_avatar = "GU"
             
         st.markdown(f"""
-        <div class="sidebar-profile">
-            <div class="profile-avatar">{profile_avatar}</div>
-            <div class="profile-info">
-                <div class="profile-name">{profile_name}</div>
-                <div class="profile-role">Security Analyst</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="sidebar-profile">
+    <div class="profile-avatar">{profile_avatar}</div>
+    <div class="profile-info">
+        <div class="profile-name">{profile_name}</div>
+        <div class="profile-role">Security Analyst</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     # -- Apply filters ----                                                  
     filtered = df[
@@ -1335,60 +1347,60 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     
     with m_cols[0]:
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-header">
-                <div class="metric-icon-box" style="background:rgba(239,68,68,0.1); color:#f87171;">{chr(0x1f6e1)}</div>
-                <div class="metric-change" style="color:#f87171;">+18%</div>
-            </div>
-            <div class="metric-body">
-                <div class="metric-value" style="color:#f87171;">{total_threats}</div>
-                <div class="metric-label">Threats Detected</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-card">
+    <div class="metric-header">
+        <div class="metric-icon-box" style="background:rgba(239,68,68,0.1); color:#f87171;">{chr(0x1f6e1)}</div>
+        <div class="metric-change" style="color:#f87171;">+18%</div>
+    </div>
+    <div class="metric-body">
+        <div class="metric-value" style="color:#f87171;">{total_threats}</div>
+        <div class="metric-label">Threats Detected</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
         
     with m_cols[1]:
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-header">
-                <div class="metric-icon-box" style="background:rgba(14,165,233,0.1); color:#38bdf8;">{chr(0x2709)}</div>
-                <div class="metric-change" style="color:#38bdf8;">+5.2%</div>
-            </div>
-            <div class="metric-body">
-                <div class="metric-value" style="color:#38bdf8;">{total}</div>
-                <div class="metric-label">Emails Analyzed</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-card">
+    <div class="metric-header">
+        <div class="metric-icon-box" style="background:rgba(14,165,233,0.1); color:#38bdf8;">{chr(0x2709)}</div>
+        <div class="metric-change" style="color:#38bdf8;">+5.2%</div>
+    </div>
+    <div class="metric-body">
+        <div class="metric-value" style="color:#38bdf8;">{total}</div>
+        <div class="metric-label">Emails Analyzed</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
         
     with m_cols[2]:
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-header">
-                <div class="metric-icon-box" style="background:rgba(245,158,11,0.1); color:#fb923c;">{chr(0x26a0)}</div>
-                <div class="metric-change" style="color:#fb923c;">+12%</div>
-            </div>
-            <div class="metric-body">
-                <div class="metric-value" style="color:#fb923c;">{total_flagged}</div>
-                <div class="metric-label">Quarantined / Flagged</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-card">
+    <div class="metric-header">
+        <div class="metric-icon-box" style="background:rgba(245,158,11,0.1); color:#fb923c;">{chr(0x26a0)}</div>
+        <div class="metric-change" style="color:#fb923c;">+12%</div>
+    </div>
+    <div class="metric-body">
+        <div class="metric-value" style="color:#fb923c;">{total_flagged}</div>
+        <div class="metric-label">Quarantined / Flagged</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
         
     with m_cols[3]:
         risk_color = "#4ade80" if avg_score < 40 else "#fb923c" if avg_score < 75 else "#f87171"
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-header">
-                <div class="metric-icon-box" style="background:rgba(74,222,128,0.1); color:#4ade80;">📈</div>
-                <div class="metric-change" style="color:#4ade80;">-3.1pt</div>
-            </div>
-            <div class="metric-body">
-                <div class="metric-value" style="color:{risk_color};">{avg_score}</div>
-                <div class="metric-label">Avg Risk Score</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-card">
+    <div class="metric-header">
+        <div class="metric-icon-box" style="background:rgba(74,222,128,0.1); color:#4ade80;">📈</div>
+        <div class="metric-change" style="color:#4ade80;">-3.1pt</div>
+    </div>
+    <div class="metric-body">
+        <div class="metric-value" style="color:{risk_color};">{avg_score}</div>
+        <div class="metric-label">Avg Risk Score</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -1499,18 +1511,18 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
                     )
 
                 st.markdown(f"""
-                <div class="email-card">
-                    <div class="card-subject">{_html.escape(str(row['subject']))}</div>
-                    <div class="card-sender">{chr(0x2709)} {_html.escape(str(row['sender']))}</div>
-                    <div class="meta-row">
-                        {_badge(row['category'])}
-                        <span class="score-pill">Score: <span style="color:{s_color}">{row['score']}</span> / 100</span>
-                        <span class="conf-pill">Confidence: {conf_pct}%</span>
-                        <span class="conf-pill" style="color:#475569; font-size:11px;">#{_html.escape(str(eid))}</span>
-                    </div>
-                    <div class="explanation">{chr(0x1f50d)} {_html.escape(str(row['explanation']))}</div>{llm_exp}
-                </div>
-                """, unsafe_allow_html=True)
+<div class="email-card">
+<div class="card-subject">{_html.escape(str(row['subject']))}</div>
+<div class="card-sender">{chr(0x2709)} {_html.escape(str(row['sender']))}</div>
+<div class="meta-row">
+{_badge(row['category'])}
+<span class="score-pill">Score: <span style="color:{s_color}">{row['score']}</span> / 100</span>
+<span class="conf-pill">Confidence: {conf_pct}%</span>
+<span class="conf-pill" style="color:#475569; font-size:11px;">#{_html.escape(str(eid))}</span>
+</div>
+<div class="explanation">{chr(0x1f50d)} {_html.escape(str(row['explanation']))}</div>{llm_exp}
+</div>
+""", unsafe_allow_html=True)
 
     elif active_tab == "Analysis":
         # -- Master-Detail Explorer Pane ----                                    
