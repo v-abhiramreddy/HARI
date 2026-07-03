@@ -47,6 +47,15 @@ RESULTS_PATH = PROJECT_ROOT / "results.json"
 # Import the LLM analysis module
 from agents.llm_analysis_agent import analyze_batch
 
+# Shared state dictionary to robustly capture agent state mutations for main() summary
+PIPELINE_STATE = {
+    "emails": [],
+    "results": [],
+    "category_counts": {},
+    "save_error": None,
+    "mode": "unknown"
+}
+
 
 # ---------------------------------------------------------------------------
 # ADK Agent 1: Fetch emails
@@ -69,6 +78,8 @@ class FetchEmailsAgent(BaseAgent):
             emails = fetch_recent_emails(count=15)
             ctx.session.state["emails"] = emails
             ctx.session.state["mode"] = "live"
+            PIPELINE_STATE["emails"] = emails
+            PIPELINE_STATE["mode"] = "live"
             print(f"      [OK] Successfully fetched {len(emails)} email(s).")
         except Exception as exc:
             err_msg = str(exc).replace("→", "->")
@@ -81,11 +92,15 @@ class FetchEmailsAgent(BaseAgent):
                     emails = json.load(f)[:15]
                 ctx.session.state["emails"] = emails
                 ctx.session.state["mode"] = "mock"
+                PIPELINE_STATE["emails"] = emails
+                PIPELINE_STATE["mode"] = "mock"
                 print(f"      [OK] Loaded {len(emails)} mock email(s).")
             except Exception as mock_exc:
                 print(f"      [ERROR] Could not load mock emails: {mock_exc}")
                 ctx.session.state["emails"] = []
                 ctx.session.state["mode"] = "error"
+                PIPELINE_STATE["emails"] = []
+                PIPELINE_STATE["mode"] = "error"
 
         # Yield an empty event to satisfy the async generator contract
         yield Event(
@@ -161,6 +176,10 @@ class ScoreEmailsAgent(BaseAgent):
         ctx.session.state["results"] = new_results
         ctx.session.state["category_counts"] = dict(category_counts)
         ctx.session.state["save_error"] = save_error
+
+        PIPELINE_STATE["results"] = new_results
+        PIPELINE_STATE["category_counts"] = dict(category_counts)
+        PIPELINE_STATE["save_error"] = save_error
 
         yield Event(
             author=self.name,
@@ -268,6 +287,7 @@ class LlmAnalysisAgent(BaseAgent):
         else:
             results = analyze_batch(emails, results, score_threshold=25)
             ctx.session.state["results"] = results
+            PIPELINE_STATE["results"] = results
 
         yield Event(
             author=self.name,
@@ -326,20 +346,18 @@ async def main():
     ):
         pass  # events are handled inside each agent node
 
-    # 4. Retrieve final state from session
-    updated_session = await sessions.get_session(
-        app_name="email_safety", user_id="user", session_id=session.id
-    )
-    results = updated_session.state.get("results", [])
-    counts = updated_session.state.get("category_counts", {})
-    save_error = updated_session.state.get("save_error")
+    # 4. Retrieve final state from PIPELINE_STATE (robust to session copying)
+    results = PIPELINE_STATE.get("results", [])
+    counts = PIPELINE_STATE.get("category_counts", {})
+    save_error = PIPELINE_STATE.get("save_error")
+    mode = PIPELINE_STATE.get("mode", "unknown")
 
     # 5. Summary report
     print("\n" + "=" * 60)
     print("Pipeline Execution Summary (via ADK)")
     print("=" * 60)
     print(f"Total Emails Scanned : {len(results)}")
-    print(f"Data mode            : {updated_session.state.get('mode', 'unknown')}")
+    print(f"Data mode            : {mode}")
     if save_error:
         print(f"[ERROR] results.json was NOT saved: {save_error}")
     print("Breakdown by Safety Category:")

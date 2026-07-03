@@ -94,6 +94,13 @@ def _load_cached_token() -> Credentials | None:
 
 def _run_oauth_flow() -> Credentials:
     """Run the OAuth2 InstalledAppFlow and return new credentials."""
+    # Check if running in a non-interactive environment to prevent hangs
+    if not sys.stdin.isatty() or os.environ.get("NON_INTERACTIVE") == "1":
+        raise RuntimeError(
+            "Non-interactive environment detected: token.json is missing or expired, "
+            "and OAuth flow cannot be run without user interaction. Please run the "
+            "authentication flow in an interactive terminal first."
+        )
     flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_PATH), SCOPES)
     creds = flow.run_local_server(port=0, prompt="consent")
     return creds
