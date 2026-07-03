@@ -34,9 +34,9 @@ import streamlit as st
 # ──────────────────────────────────────────────────────────────────────────────
 #  Path plumbing — use centralised _path_setup instead of inline sys.path hacks
 # ──────────────────────────────────────────────────────────────────────────────
-_PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
-if _PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, _PROJECT_ROOT)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
 
 import _path_setup  # noqa: E402  — adds mcp-server/ to sys.path
 
