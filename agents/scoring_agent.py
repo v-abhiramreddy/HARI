@@ -221,6 +221,10 @@ def score_email(email: dict) -> dict:
     if any("fail" in v for v in (spf, dkim, dmarc)):
         signals_sender.append("Failed Authentication (SPF/DKIM/DMARC)")
 
+    # Signal D: Lookalike Sender Domain (Typosquatting)
+    if check_lookalike(sender_domain):
+        signals_sender.append("Lookalike Sender Domain (Typosquatting)")
+
     # --- CATEGORY 2: Link Analysis ---
     # Signal A: Display Text vs URL Destination Mismatch
     # We look for a brand name domain mentioned in body_text, but the actual links list has a different domain.
@@ -272,7 +276,7 @@ def score_email(email: dict) -> dict:
         "immediately", "within 24 hours", "within 12 hours", 
         "deactivated", "lock", "locked", "compromised", "unauthorized",
         "suspicious login", "billing-support", "immediate joining",
-        "offer letter attached", "work from home"
+        "offer letter attached", "work from home", "deadline"
     ]
     if any(re.search(r'\b' + re.escape(kw) + r'\b', (subject + " " + body_text).lower()) for kw in urgency_keywords):
         signals_language.append("Urgency and Threats")
@@ -297,7 +301,8 @@ def score_email(email: dict) -> dict:
     # Signal C: Too-Good-To-Be-True Offers
     offer_keywords = [
         "congratulations", "won", "selected as the winner", "sweepstakes",
-        "cash prize", "gift card", "free gift", "scholarship award"
+        "cash prize", "gift card", "free gift", "scholarship award", "grant",
+        "received a payment"
     ]
     if any(re.search(r'\b' + re.escape(kw) + r'\b', (subject + " " + body_text).lower()) for kw in offer_keywords):
         signals_language.append("Too-Good-To-Be-True Offers")
