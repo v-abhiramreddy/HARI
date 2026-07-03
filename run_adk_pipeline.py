@@ -89,7 +89,7 @@ class FetchEmailsAgent(BaseAgent):
             mock_path = PROJECT_ROOT / "mock-data" / "sample-emails.json"
             try:
                 with open(mock_path, "r", encoding="utf-8") as f:
-                    emails = json.load(f)[:15]
+                    emails = json.load(f)
                 ctx.session.state["emails"] = emails
                 ctx.session.state["mode"] = "mock"
                 PIPELINE_STATE["emails"] = emails
