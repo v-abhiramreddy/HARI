@@ -1670,10 +1670,11 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     total_flagged = n_phish + n_scam + n_spam
     avg_score = round(df["score"].mean(), 1) if not df.empty else 0.0
 
-    m_cols    = st.columns(4)
-    
-    with m_cols[0]:
-        st.markdown(f"""
+    if active_tab in ["Dashboard", "Analytics"]:
+        m_cols    = st.columns(4)
+        
+        with m_cols[0]:
+            st.markdown(f"""
 <div class="metric-card">
     <div class="metric-header">
         <div class="metric-icon-box" style="background:rgba(239,68,68,0.1); color:#f87171;">{chr(0x1f6e1)}</div>
@@ -1685,9 +1686,9 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     </div>
 </div>
 """, unsafe_allow_html=True)
-        
-    with m_cols[1]:
-        st.markdown(f"""
+            
+        with m_cols[1]:
+            st.markdown(f"""
 <div class="metric-card">
     <div class="metric-header">
         <div class="metric-icon-box" style="background:rgba(14,165,233,0.1); color:#38bdf8;">{chr(0x2709)}</div>
@@ -1699,9 +1700,9 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     </div>
 </div>
 """, unsafe_allow_html=True)
-        
-    with m_cols[2]:
-        st.markdown(f"""
+            
+        with m_cols[2]:
+            st.markdown(f"""
 <div class="metric-card">
     <div class="metric-header">
         <div class="metric-icon-box" style="background:rgba(245,158,11,0.1); color:#fb923c;">{chr(0x26a0)}</div>
@@ -1713,10 +1714,10 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     </div>
 </div>
 """, unsafe_allow_html=True)
-        
-    with m_cols[3]:
-        risk_color = "#4ade80" if avg_score < 40 else "#fb923c" if avg_score < 75 else "#f87171"
-        st.markdown(f"""
+            
+        with m_cols[3]:
+            risk_color = "#4ade80" if avg_score < 40 else "#fb923c" if avg_score < 75 else "#f87171"
+            st.markdown(f"""
 <div class="metric-card">
     <div class="metric-header">
         <div class="metric-icon-box" style="background:rgba(74,222,128,0.1); color:#4ade80;">📈</div>
@@ -1729,7 +1730,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("---")
+        st.markdown("---")
 
     if active_tab == "Dashboard":
         # -- Analytics Section ----                                              
