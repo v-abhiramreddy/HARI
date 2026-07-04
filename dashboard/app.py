@@ -2039,16 +2039,23 @@ Google has returned a <strong>403 Forbidden / Access Denied</strong> error. This
 def main() -> None:
     params = st.query_params
 
-    # -- 0. Check persistent 403 error state ----
-    # If there is a stale 403 error but the user is visiting fresh (no code param),
-    # clear it automatically so the sign-in page is shown instead of being stuck.
+    # -- 0a. Google OAuth error redirect: ?error=access_denied ----
+    # When Google DENIES access, it redirects back with ?error=... (no ?code=)
+    if "error" in params:
+        error_type = params.get("error", "unknown")
+        error_desc = params.get("error_description", "")
+        full_error = f"Google returned error={error_type}"
+        if error_desc:
+            full_error += f": {error_desc}"
+        full_error += f" | redirect_uri={REDIRECT_URI}"
+        st.query_params.clear()
+        st.session_state["oauth_403_error"] = full_error
+        st.rerun()
+
+    # -- 0b. Show stored error from a previous failed sign-in ----
     if "oauth_403_error" in st.session_state:
-        if "code" not in params:
-            # Fresh page load with no OAuth callback — clear stale error, show sign-in
-            del st.session_state["oauth_403_error"]
-        else:
-            render_403_error_page(st.session_state["oauth_403_error"])
-            return
+        render_403_error_page(st.session_state["oauth_403_error"])
+        return
 
     # -- 1. OAuth callback: ?code=... ----                                    
     if "code" in params and "access_token" not in st.session_state:
@@ -2061,14 +2068,8 @@ def main() -> None:
                 st.rerun()
             except Exception as exc:
                 st.query_params.clear()
-                if is_403_error(exc):
-                    st.session_state["oauth_403_error"] = str(exc)
-                    st.rerun()
-                else:
-                    st.error(f"Sign-in failed: {exc}")
-                    if st.button("Try again", key="retry_signin"):
-                        st.rerun()
-                    return
+                st.session_state["oauth_403_error"] = str(exc)
+                st.rerun()
 
     # -- 2. Demo mode: ?demo=1 ----                                         
     if "demo" in params and params["demo"] == "1":
