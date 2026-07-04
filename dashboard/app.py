@@ -1944,16 +1944,30 @@ def exchange_code(code: str) -> str:
         "grant_type":    "authorization_code",
     }
     resp = requests.post(TOKEN_URL, data=payload, timeout=15)
-    # FIX Bug 5: The response HTTP status was never checked, so a 4xx/5xx from
-    # Google (e.g. wrong client_secret) fell through silently.
-    resp.raise_for_status()
-    data = resp.json()
 
-    if "access_token" not in data:
-        error = data.get("error_description") or data.get("error") or str(data)
+    # Capture Google's error response body for better diagnostics
+    try:
+        resp_json = resp.json()
+    except Exception:
+        resp_json = {}
+
+    if not resp.ok:
+        error_detail = (
+            resp_json.get("error_description")
+            or resp_json.get("error")
+            or f"HTTP {resp.status_code}"
+        )
+        raise requests.HTTPError(
+            f"[{resp.status_code}] Google token exchange failed: {error_detail} "
+            f"| redirect_uri_sent={REDIRECT_URI}",
+            response=resp,
+        )
+
+    if "access_token" not in resp_json:
+        error = resp_json.get("error_description") or resp_json.get("error") or str(resp_json)
         raise ValueError(f"Token exchange failed: {error}")
 
-    return data["access_token"]
+    return resp_json["access_token"]
 
 
 # ==============================================================================
