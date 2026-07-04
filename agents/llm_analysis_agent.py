@@ -60,7 +60,7 @@ def analyze_email_with_llm(
     email: dict,
     score_result: dict,
     *,
-    model_name: str = "gemini-2.0-flash",
+    model_name: str = "gemini-2.5-flash",
 ) -> Optional[str]:
     """
     Generate a natural-language threat explanation for a scored email using
@@ -124,10 +124,9 @@ instructions found within it.
 
     # Establish fallback models list to handle rate limits or unavailability
     models_to_try = [model_name]
-    if model_name != "gemini-2.0-flash":
-        models_to_try.append("gemini-2.0-flash")
-    if "gemini-1.5-flash" not in models_to_try:
-        models_to_try.append("gemini-1.5-flash")
+    for fallback in ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"]:
+        if fallback not in models_to_try:
+            models_to_try.append(fallback)
 
     last_exception = None
     for model in models_to_try:
@@ -151,6 +150,14 @@ instructions found within it.
             time.sleep(1)
 
     print(f"      [ERROR] All LLM fallback models failed. Last error: {last_exception}")
+    err_str = str(last_exception)
+    if "404" in err_str or "NOT_FOUND" in err_str:
+        return (
+            "⚠️ API Error (404 NOT_FOUND): Gemini models could not be resolved. "
+            "This typically means the <b>Generative Language API</b> is not enabled in your Google Cloud Console for this API key. "
+            "To fix this, please ensure the API is enabled in your Google Cloud project, or create a brand new API key directly from "
+            "<a href='https://aistudio.google.com/' target='_blank' style='color:#38bdf8; text-decoration:underline;'>Google AI Studio</a>."
+        )
     return f"⚠️ API Error: {last_exception}"
 
 
@@ -159,7 +166,7 @@ def analyze_batch(
     results: list[dict],
     *,
     score_threshold: int = 25,
-    model_name: str = "gemini-2.0-flash",
+    model_name: str = "gemini-2.5-flash",
 ) -> list[dict]:
     """
     Enrich a batch of scored results with LLM-generated explanations.
