@@ -144,7 +144,13 @@ instructions found within it.
             if response.text:
                 return response.text.strip()
         except Exception as exc:
-            print(f"      [WARNING] LLM analysis with {model} failed: {exc}")
+            import traceback
+            print("=" * 80)
+            print("MODEL:", model)
+            print("EXCEPTION TYPE:", type(exc))
+            print("EXCEPTION:", repr(exc))
+            traceback.print_exc()
+            print("=" * 80)
             last_exception = exc
             import time
             time.sleep(1)
