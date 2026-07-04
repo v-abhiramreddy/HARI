@@ -112,6 +112,48 @@ html, body, [class*="css"] {
     gap: 6px;
     margin-bottom: 20px;
 }
+/* -- Sidebar custom radio menu styling -- */
+div[data-testid="stRadio"] {
+    background-color: transparent !important;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    font-size: 13.5px !important;
+    color: #94a3b8 !important;
+    background-color: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.2s, color 0.2s !important;
+}
+/* Hide the default radio circle/dot */
+div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] > div:first-child {
+    display: none !important;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
+    margin-right: 0 !important;
+    padding: 0 !important;
+}
+/* Style the selected/active radio item */
+div[data-testid="stRadio"] label:has(input:checked) {
+    background: rgba(14, 165, 233, 0.12) !important;
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #38bdf8 !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+div[data-testid="stRadio"] label:hover:not(:has(input:checked)) {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #e2e8f0 !important;
+}
 .nav-item {
     display: flex;
     align-items: center;
@@ -1375,48 +1417,42 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     if is_demo:
         url_suffix = "?demo=1"
     else:
-        token = st.session_state.get("access_token", "")
-        url_suffix = f"?access_token={token}" if token else ""
-
-    tab_prefix = "&" if url_suffix else "?"
-    
-    db_url = f"{url_suffix}{tab_prefix}tab=Dashboard"
-    ea_url = f"{url_suffix}{tab_prefix}tab=Analysis"
-    ti_url = f"{url_suffix}{tab_prefix}tab=ThreatIntel"
-    ls_url = f"{url_suffix}{tab_prefix}tab=LinkScanner"
-    sd_url = f"{url_suffix}{tab_prefix}tab=ScamDetector"
-    ur_url = f"{url_suffix}{tab_prefix}tab=UserReports"
-    an_url = f"{url_suffix}{tab_prefix}tab=Analytics"
-    se_url = f"{url_suffix}{tab_prefix}tab=Settings"
-    
-    db_active = "active" if active_tab == "Dashboard" else ""
-    ea_active = "active" if active_tab == "Analysis" else ""
-    ti_active = "active" if active_tab == "ThreatIntel" else ""
-    ls_active = "active" if active_tab == "LinkScanner" else ""
-    sd_active = "active" if active_tab == "ScamDetector" else ""
-    ur_active = "active" if active_tab == "UserReports" else ""
-    an_active = "active" if active_tab == "Analytics" else ""
-    se_active = "active" if active_tab == "Settings" else ""
-
     # -- Sidebar custom navigation and filters ----                                                
     with st.sidebar:
-        st.markdown(f"""
-<div class="sidebar-logo">
+        st.markdown("""
+<div class="sidebar-logo" style="margin-bottom: 12px;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span class="sidebar-logo-text">INBOX GUARDIAN</span>
 </div>
-<div class="sidebar-nav">
-    <a href="{db_url}" target="_self" class="nav-item {db_active}">📊 Dashboard</a>
-    <a href="{ea_url}" target="_self" class="nav-item {ea_active}">✉️ Email Analysis</a>
-    <a href="{ti_url}" target="_self" class="nav-item {ti_active}">⚠️ Threat Intel</a>
-    <a href="{ls_url}" target="_self" class="nav-item {ls_active}">🔗 Link Scanner</a>
-    <a href="{sd_url}" target="_self" class="nav-item {sd_active}">💀 Scam Detector</a>
-    <a href="{ur_url}" target="_self" class="nav-item {ur_active}">👥 User Reports</a>
-    <a href="{an_url}" target="_self" class="nav-item {an_active}">📈 Analytics</a>
-    <a href="{se_url}" target="_self" class="nav-item {se_active}">⚙️ Settings</a>
-</div>
 """, unsafe_allow_html=True)
+
+        tabs = {
+            "Dashboard": "📊 Dashboard",
+            "Analysis": "✉️ Email Analysis",
+            "ThreatIntel": "⚠️ Threat Intel",
+            "LinkScanner": "🔗 Link Scanner",
+            "ScamDetector": "💀 Scam Detector",
+            "UserReports": "👥 User Reports",
+            "Analytics": "📈 Analytics",
+            "Settings": "⚙️ Settings"
+        }
         
+        tab_list = list(tabs.keys())
+        default_index = tab_list.index(active_tab) if active_tab in tab_list else 0
+        
+        selected_label = st.radio(
+            "Navigation",
+            options=list(tabs.values()),
+            index=default_index,
+            label_visibility="collapsed",
+            key="sidebar_nav_radio"
+        )
+        
+        new_active_tab = [k for k, v in tabs.items() if v == selected_label][0]
+        if new_active_tab != active_tab:
+            st.query_params["tab"] = new_active_tab
+            st.rerun()
+
         st.markdown("---")
         st.markdown("### Filters")
 
