@@ -1457,8 +1457,10 @@ def render_settings_tab(is_demo: bool) -> None:
         if "widget_slider" in st.session_state: st.session_state.sensitivity_threshold = st.session_state.widget_slider
 
     st.markdown("""
-<div style="background:linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.05); padding:20px; border-radius:12px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,0,0,0.15);">
-    <h5 style="color:#f8fafc; margin-top:0; margin-bottom:16px; font-weight:600;">Analysis Preferences</h5>
+<div style="padding-top:8px; padding-bottom:12px;">
+    <h5 style="color:#f8fafc; margin-top:0; margin-bottom:8px; font-weight:600;">Analysis Preferences</h5>
+    <p style="color:#94a3b8; font-size:14px; margin-top:0; margin-bottom:0;">Customize how the AI threat detection engine operates.</p>
+</div>
 """, unsafe_allow_html=True)
 
     st.checkbox("Enable real-time Gemini AI analysis", value=st.session_state.gemini_enabled, key="widget_gemini", on_change=sync_settings)
@@ -1468,7 +1470,7 @@ def render_settings_tab(is_demo: bool) -> None:
     st.markdown("<br>", unsafe_allow_html=True)
     st.slider("Scam categorization sensitivity threshold", min_value=0, max_value=100, value=st.session_state.sensitivity_threshold, key="widget_slider", on_change=sync_settings)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("---")
     
     st.markdown("<h4 style='color:#ffffff; margin-bottom:12px;'>📊 Session Information</h4>", unsafe_allow_html=True)
     st.markdown(f"""
@@ -1695,7 +1697,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     total_flagged = n_phish + n_scam + n_spam
     avg_score = round(df["score"].mean(), 1) if not df.empty else 0.0
 
-    if active_tab in ["Dashboard", "Analytics"]:
+    if active_tab in ["Dashboard", "Analytics", "Analysis", "Settings"]:
         m_cols    = st.columns(4)
         
         with m_cols[0]:
