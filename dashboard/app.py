@@ -1809,7 +1809,6 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
                 # Check if API key is configured
                 api_key = None
                 try:
-                    import streamlit as st
                     api_key = st.secrets.get("GEMINI_API_KEY") or st.secrets.get("GOOGLE_API_KEY")
                 except Exception:
                     pass
