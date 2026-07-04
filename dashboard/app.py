@@ -1330,6 +1330,22 @@ def render_user_reports() -> None:
 
 def render_analytics_tab(df: pd.DataFrame, filtered: pd.DataFrame) -> None:
     
+    # Header and Download Button
+    col_title, col_btn = st.columns([3, 1])
+    with col_title:
+        st.markdown("<h3 style='color: white; margin-top:0;'>Inbox Analytics & Trends</h3>", unsafe_allow_html=True)
+    with col_btn:
+        csv_data = filtered.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="⬇️ Download Analysis Report",
+            data=csv_data,
+            file_name="email_analysis_report.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
     # Display the charts directly (no expander)
     chart_col1, chart_col2 = st.columns(2)
     with chart_col1:
