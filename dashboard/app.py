@@ -1136,13 +1136,18 @@ def render_threat_intel() -> None:
     st.markdown("""
 <div class="detail-card">
 <h3 style="margin-top:0; color:#38bdf8;">🛡️ Threat Intelligence Database</h3>
-<p style="font-size:13.5px; color:#94a3b8; line-height:1.6;">
-Inbox Guardian checks incoming emails against lists of known unsafe domains and scams to keep you safe.
-</p>
+<ul style="font-size:13px; color:#94a3b8; line-height:1.6; margin-top:8px; margin-bottom:0; padding-left:20px;">
+    <li>Constantly updated database of known scam campaigns and unsafe links.</li>
+    <li>Incoming emails are automatically scanned against this database.</li>
+</ul>
 
 <hr>
 
-<h4 style="color:#ffffff; margin-bottom:12px;">🏢 Monitored Brand Domains (Indian Corporates & Portals)</h4>
+<h4 style="color:#ffffff; margin-bottom:8px;">🏢 Monitored Brand Domains (Indian Corporates & Portals)</h4>
+<ul style="font-size:13px; color:#94a3b8; line-height:1.6; margin-top:0; margin-bottom:16px; padding-left:20px;">
+    <li>We strictly check sender email addresses against these official domain names.</li>
+    <li>Any slight misspelling (e.g., <code style="color:#f87171;">wippro.com</code>) is instantly flagged as a lookalike scam.</li>
+</ul>
 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
 <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:12px; border-radius:8px;">
 <div style="font-weight:600; color:#e2e8f0; font-size:13px;">Infosys Ltd.</div>
@@ -1174,7 +1179,11 @@ Inbox Guardian checks incoming emails against lists of known unsafe domains and 
 </div>
 </div>
 
-<h4 style="color:#ffffff; margin-bottom:12px;">🚨 High-Risk Urgency Keywords (Student Scam Heuristics)</h4>
+<h4 style="color:#ffffff; margin-bottom:8px;">🚨 High-Risk Urgency Keywords (Student Scam Heuristics)</h4>
+<ul style="font-size:13px; color:#94a3b8; line-height:1.6; margin-top:0; margin-bottom:16px; padding-left:20px;">
+    <li>Scammers often create a false sense of urgency to make you click without thinking.</li>
+    <li>Emails containing these financial or urgent phrases are penalized with higher threat scores.</li>
+</ul>
 <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
 <span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">training fee</span>
 <span style="background:rgba(239, 68, 68, 0.12); color:#f87171; border:1px solid rgba(239, 68, 68, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">joining fee</span>
@@ -1186,10 +1195,11 @@ Inbox Guardian checks incoming emails against lists of known unsafe domains and 
 <span style="background:rgba(56, 189, 248, 0.12); color:#38bdf8; border:1px solid rgba(56, 189, 248, 0.2); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600;">offer letter attached</span>
 </div>
 
-<h4 style="color:#ffffff; margin-bottom:12px;">🛡️ Email Authentication Baseline Requirements</h4>
-<p style="font-size:13px; color:#94a3b8; line-height:1.5; margin-bottom:14px;">
-Emails from trusted brands must pass security and authentication checks. Any mismatch or failure will immediately raise the threat alert score.
-</p>
+<h4 style="color:#ffffff; margin-bottom:8px;">🛡️ Email Authentication Baseline Requirements</h4>
+<ul style="font-size:13px; color:#94a3b8; line-height:1.6; margin-top:0; margin-bottom:14px; padding-left:20px;">
+    <li>Every email must pass standard internet security checks (SPF, DKIM, DMARC).</li>
+    <li>If these checks fail, the email is likely forged or spoofed, triggering an alert.</li>
+</ul>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1675,7 +1685,8 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 
     header_col1, header_col2 = st.columns([3, 1])
     with header_col1:
-        st.markdown(f"""
+        if active_tab != "ThreatIntel":
+            st.markdown(f"""
 <h2 style="margin:0 0 4px 0; font-weight:700; color:#ffffff; font-size:24px;">{title}</h2>
 <p style="margin:0; font-size:13.5px; color:#94a3b8; font-weight:500;">{subtitle}</p>
 """, unsafe_allow_html=True)
