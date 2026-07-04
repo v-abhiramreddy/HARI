@@ -83,6 +83,11 @@ st.markdown("""
     border-right: 1px solid rgba(255, 255, 255, 0.04) !important;
 }
 
+/* Hide Streamlit default header anchor link buttons next to headings */
+.header-anchor {
+    display: none !important;
+}
+
 html, body, [class*="css"] { 
     font-family: 'Inter', sans-serif; 
 }
@@ -613,6 +618,72 @@ hr { border-color: rgba(255,255,255,0.07) !important; margin: 20px 0; }
     color: #0ea5e9 !important;
     text-decoration: underline !important;
 }
+
+/* -- 403 Error Page Custom Styles -- */
+.error-outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    width: 100%;
+}
+.error-card {
+    background: rgba(30, 16, 20, 0.75);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 18px;
+    padding: 40px 32px;
+    max-width: 580px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(239, 68, 68, 0.08);
+    backdrop-filter: blur(12px);
+}
+.error-logo-container {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px auto;
+    border-radius: 16px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+}
+.error-title-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fca5a5;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.error-desc-text {
+    font-size: 14.5px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    text-align: left;
+}
+.troubleshoot-title {
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-size: 15px;
+    text-align: left;
+}
+.troubleshoot-list {
+    margin-bottom: 24px;
+    padding-left: 20px;
+    text-align: left;
+}
+.troubleshoot-list li {
+    font-size: 14px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+.troubleshoot-list li strong {
+    color: #ffffff;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -641,6 +712,10 @@ def _secret(key: str, fallback: str = "") -> str:
                     return cfg.get("client_id", fallback)
                 elif key == "GOOGLE_CLIENT_SECRET":
                     return cfg.get("client_secret", fallback)
+                elif key == "REDIRECT_URI":
+                    uris = cfg.get("redirect_uris")
+                    if uris and isinstance(uris, list):
+                        return uris[0]
     except Exception:
         pass
 
@@ -1867,10 +1942,77 @@ def exchange_code(code: str) -> str:
 
 
 # ==============================================================================
+#  403 Forbidden troubleshooting helpers
+# ==============================================================================
+
+def is_403_error(exc: Exception) -> bool:
+    """Determine if the exception is an HTTP 403 error from Google API or OAuth."""
+    # Check for requests HTTPError with status 403
+    if hasattr(exc, "response") and exc.response is not None:
+        if getattr(exc.response, "status_code", None) == 403:
+            return True
+    
+    # Or string matching on error representation
+    exc_str = str(exc).lower()
+    if "403" in exc_str or "access_denied" in exc_str or "forbidden" in exc_str:
+        return True
+        
+    return False
+
+
+def render_403_error_page(error_msg: str) -> None:
+    st.markdown(f"""
+<div class="error-outer">
+<div class="error-card">
+<div class="error-logo-container">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+<line x1="12" y1="9" x2="12" y2="13"/>
+<line x1="12" y1="17" x2="12.01" y2="17"/>
+</svg>
+</div>
+<div class="error-title-text">Google Sign-In Authorization Required (HTTP 403)</div>
+<div class="error-desc-text">
+Google has returned a <strong>403 Forbidden / Access Denied</strong> error. This usually indicates that the app is in the "Testing" phase or the Gmail API has not been enabled for this project.
+</div>
+<div class="troubleshoot-title">⚙️ Troubleshooting Steps:</div>
+<ol class="troubleshoot-list">
+<li><strong>Add Test Users in Google Console</strong>: If your Google Cloud OAuth Consent Screen is in <em>Testing</em> status, only users explicitly added as "Test users" can authenticate. Go to the <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" style="color:#38bdf8; text-decoration:underline;">Google Cloud Console > OAuth consent screen</a> and add your Gmail account to the <strong>Test users</strong> list.</li>
+<li><strong>Enable the Gmail API</strong>: Verify that the Gmail API is enabled for project <code>capstone-agent-500304</code>. Go to <a href="https://console.cloud.google.com/apis/library/gmail.googleapis.com" target="_blank" style="color:#38bdf8; text-decoration:underline;">Google Cloud API Library</a> and click <strong>Enable</strong>.</li>
+<li><strong>Verify Redirect URI Match</strong>: The authorized redirect URI registered in Google Console must match exactly. Your project credentials only register <code>http://localhost:8501</code>. Make sure you access the dashboard on this exact port/URL.</li>
+</ol>
+<div style="font-size:12px; color:#94a3b8; margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; text-align:left;">
+<strong>Google API Error details:</strong><br>
+<code style="color:#f87171; word-break:break-all;">{_html.escape(error_msg)}</code>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔄 Try Again / Sign Out", key="clear_403_err", use_container_width=True):
+            st.session_state.clear()
+            st.query_params.clear()
+            st.rerun()
+    with col2:
+        if st.button("🖥️ View Demo Dashboard", key="view_demo_403", use_container_width=True):
+            st.session_state.clear()
+            st.session_state["demo_mode"] = True
+            st.query_params.clear()
+            st.rerun()
+
+
+# ==============================================================================
 #  Main app router
 # ==============================================================================
 
 def main() -> None:
+    # -- 0. Check persistent 403 error state ----
+    if "oauth_403_error" in st.session_state:
+        render_403_error_page(st.session_state["oauth_403_error"])
+        return
+
     params = st.query_params
 
     # -- 1. OAuth callback: ?code=... ----                                    
@@ -1884,10 +2026,14 @@ def main() -> None:
                 st.rerun()
             except Exception as exc:
                 st.query_params.clear()
-                st.error(f"Sign-in failed: {exc}")
-                if st.button("Try again", key="retry_signin"):
+                if is_403_error(exc):
+                    st.session_state["oauth_403_error"] = str(exc)
                     st.rerun()
-                return
+                else:
+                    st.error(f"Sign-in failed: {exc}")
+                    if st.button("Try again", key="retry_signin"):
+                        st.rerun()
+                    return
 
     # -- 2. Demo mode: ?demo=1 ----                                         
     if "demo" in params and params["demo"] == "1":
@@ -1926,11 +2072,15 @@ def main() -> None:
                         st.rerun()
                     return
                 except Exception as exc:
-                    st.error(f"Failed to fetch emails: {exc}")
-                    st.session_state.clear()
-                    if st.button("Sign in again", key="resign_err"):
+                    if is_403_error(exc):
+                        st.session_state["oauth_403_error"] = str(exc)
                         st.rerun()
-                    return
+                    else:
+                        st.error(f"Failed to fetch emails: {exc}")
+                        st.session_state.clear()
+                        if st.button("Sign in again", key="resign_err"):
+                            st.rerun()
+                        return
 
         df = st.session_state["scored_df"]
 

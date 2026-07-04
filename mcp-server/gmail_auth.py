@@ -102,7 +102,36 @@ def _run_oauth_flow() -> Credentials:
             "authentication flow in an interactive terminal first."
         )
     flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_PATH), SCOPES)
-    creds = flow.run_local_server(port=0, prompt="consent")
+    
+    # Check if the client is configured as a 'web' client rather than 'installed'
+    # and adjust the local server port to match the registered redirect URI (defaults to 8501).
+    port = 0
+    try:
+        import json
+        with open(str(CREDENTIALS_PATH), "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if "web" in data:
+            web_cfg = data["web"]
+            redirect_uris = web_cfg.get("redirect_uris", [])
+            for uri in redirect_uris:
+                if "localhost:" in uri or "127.0.0.1:" in uri:
+                    from urllib.parse import urlparse
+                    parsed = urlparse(uri)
+                    if parsed.port:
+                        port = parsed.port
+                        break
+    except Exception as exc:
+        print(f"[gmail_auth] Warning: could not parse credentials.json for web port: {exc}")
+
+    if port:
+        try:
+            print(f"[gmail_auth] Web client detected. Starting local flow server on registered port {port}...")
+            creds = flow.run_local_server(port=port, prompt="consent")
+        except Exception as exc:
+            print(f"[gmail_auth] Failed to start server on port {port} ({exc}). Falling back to random port...")
+            creds = flow.run_local_server(port=0, prompt="consent")
+    else:
+        creds = flow.run_local_server(port=0, prompt="consent")
     return creds
 
 
