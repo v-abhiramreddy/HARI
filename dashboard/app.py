@@ -1683,16 +1683,16 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 </div>
 """, unsafe_allow_html=True)
 
-    if is_demo:
+    # Determine active tab from URL query parameters (or default to Dashboard)
+    active_tab = st.query_params.get("tab", "Dashboard")
+
+    if is_demo and active_tab == "Dashboard":
         st.markdown("""
 <div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:16px; margin-bottom:20px; text-align:center;">
 <span style="font-size:20px;">⚠️</span> <strong style="color:#fde047; font-size:16px;">CAUTION: SAMPLE DATA IN USE</strong><br>
 <span style="color:#fef08a; font-size:14.5px;">The dashboard is currently running in DEMO MODE. All emails and statistics shown below are mock sample data.<br>Please securely sign in to scan and analyze your real live inbox.</span>
 </div>
 """, unsafe_allow_html=True)
-
-    # Determine active tab from URL query parameters (or default to Dashboard)
-    active_tab = st.query_params.get("tab", "Dashboard")
 
     # -- Sidebar custom navigation and filters ----                                                
     with st.sidebar:
