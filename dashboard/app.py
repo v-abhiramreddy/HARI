@@ -917,9 +917,25 @@ def fetch_and_score(access_token: str, count: int = 20) -> pd.DataFrame:
             scored["to"]      = email_obj.get("to", "")
             scored["date"]    = email_obj.get("date", "")
             
-            # Dynamically call Gemini threat analyzer on-the-fly for all emails
-            from agents.llm_analysis_agent import analyze_email_with_llm
-            scored["llm_explanation"] = analyze_email_with_llm(email_obj, scored)
+            # Dynamically call Gemini threat analyzer, but use caching to prevent quota exhaustion
+            cache_path = _PROJECT_ROOT / "llm_cache.json"
+            if not cache_path.exists():
+                import json
+                cache_path.write_text("{}")
+            
+            with open(cache_path, "r", encoding="utf-8") as f:
+                llm_cache = json.load(f)
+                
+            email_id = stub['id']
+            if email_id in llm_cache:
+                scored["llm_explanation"] = llm_cache[email_id]
+            else:
+                from agents.llm_analysis_agent import analyze_email_with_llm
+                explanation = analyze_email_with_llm(email_obj, scored)
+                scored["llm_explanation"] = explanation
+                llm_cache[email_id] = explanation
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(llm_cache, f, indent=2)
                 
             rows.append(scored)
         except PermissionError:
