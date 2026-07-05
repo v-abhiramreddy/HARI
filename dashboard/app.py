@@ -1210,12 +1210,12 @@ def render_link_scanner() -> None:
 <h3 style="margin-top:0; color:#38bdf8;">🔗 Link Scanner</h3>
 <ul style="font-size:15px; color:#cbd5e1; line-height:1.6; margin-top:8px; margin-bottom:0; padding-left:20px;">
     <li>Manually verify if a suspicious URL is trying to impersonate a trusted corporate brand.</li>
-    <li>Our engine breaks down the link and checks it against known lookalike patterns.</li>
+    <li>Checks for unsafe unencrypted connections, high-risk spam domain extensions, and scam keywords.</li>
 </ul>
 </div>
 """, unsafe_allow_html=True)
 
-    url = st.text_input("Enter Suspected URL to Scan", placeholder="e.g. tcs-hr-portal.info")
+    url = st.text_input("Enter Suspected URL to Scan", placeholder="e.g. http://tcs-hr-portal.info")
     
     if url:
         # Run heuristic check
@@ -1238,6 +1238,21 @@ def render_link_scanner() -> None:
                 lookalike_found = True
                 break
                 
+        # Spam Indicators Check
+        spam_warnings = []
+        if clean_url.startswith("http://"):
+            spam_warnings.append("Uses an unencrypted <b>http://</b> connection instead of secure https://")
+            
+        spam_tlds = [".xyz", ".loan", ".click", ".top", ".zip", ".info", ".biz", ".work", ".shop"]
+        if any(domain.endswith(tld) for tld in spam_tlds):
+            tld = "." + domain.split('.')[-1]
+            spam_warnings.append(f"Uses a high-risk domain extension (<b>{tld}</b>) commonly abused by spammers.")
+            
+        scam_keywords = ["free", "prize", "win", "claim", "urgent", "update", "verify", "secure", "bonus", "reward", "support", "helpdesk"]
+        found_keywords = [kw for kw in scam_keywords if kw in domain]
+        if found_keywords:
+            spam_warnings.append(f"Contains highly deceptive scam keywords in the domain: <b>{', '.join(found_keywords)}</b>")
+                
         st.markdown("<div style='margin-bottom:20px;'></div>", unsafe_allow_html=True)
         
         if lookalike_found:
@@ -1251,12 +1266,24 @@ def render_link_scanner() -> None:
 </div>
 </div>
 """, unsafe_allow_html=True)
+        elif spam_warnings:
+            warnings_html = "".join([f"<li style='margin-bottom:6px;'>{w}</li>" for w in spam_warnings])
+            st.markdown(f"""
+<div style="background:rgba(245, 158, 11, 0.08); border:1px solid rgba(245, 158, 11, 0.25); border-radius:12px; padding:20px; text-align:center;">
+<span style="font-size:24px;">⚠️</span>
+<h4 style="color:#fb923c; margin:8px 0 4px 0;">Suspicious Spam Indicators Found</h4>
+<p style="font-size:13.5px; color:#cbd5e1; margin-bottom:12px;">The domain <strong>{domain}</strong> exhibits risky characteristics.</p>
+<ul style="font-size:13.5px; color:#fb923c; text-align:left; display:inline-block; margin:0 auto;">
+{warnings_html}
+</ul>
+</div>
+""", unsafe_allow_html=True)
         else:
             st.markdown(f"""
 <div style="background:rgba(34, 197, 94, 0.08); border:1px solid rgba(34, 197, 94, 0.25); border-radius:12px; padding:20px; text-align:center;">
 <span style="font-size:24px;">✅</span>
-<h4 style="color:#4ade80; margin:8px 0 4px 0;">No Lookalike Brand Impersonation Found</h4>
-<p style="font-size:13.5px; color:#cbd5e1; margin-bottom:0;">The domain <strong>{domain}</strong> does not match lookalike patterns of monitored Indian brands.</p>
+<h4 style="color:#4ade80; margin:8px 0 4px 0;">No Immediate Threats Found</h4>
+<p style="font-size:13.5px; color:#cbd5e1; margin-bottom:0;">The domain <strong>{domain}</strong> does not match lookalike patterns or common spam indicators.</p>
 </div>
 """, unsafe_allow_html=True)
 
