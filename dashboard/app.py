@@ -1381,26 +1381,61 @@ def render_scam_detector() -> None:
 """, unsafe_allow_html=True)
 
 
-def render_user_reports() -> None:
+def render_user_reports(is_demo: bool) -> None:
+    import json
+    from pathlib import Path
     
+    file_name = "demo_reports.json" if is_demo else "live_reports.json"
+    file_path = _PROJECT_ROOT / file_name
+    
+    if not file_path.exists():
+        initial_data = [
+            {"title": "WhatsApp Part-Time Job Opportunity", "target": "Indian Students", "risk": "critical", "volume": "1,240 reports"},
+            {"title": "Infosys Fake HR Training Fee Bypass", "target": "Engineering Students", "risk": "critical", "volume": "840 reports"},
+            {"title": "Wipro Lookalike Registration Deposit", "target": "Fresh Graduates", "risk": "high", "volume": "530 reports"},
+            {"title": "Internshala Fake Internship Verification Fee", "target": "College Interns", "risk": "high", "volume": "390 reports"}
+        ] if is_demo else []
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(initial_data, f, indent=2)
+            
+    with open(file_path, "r", encoding="utf-8") as f:
+        reports = json.load(f)
+        
+    if is_demo:
+        st.markdown("""
+<div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:12px; margin-bottom:20px; text-align:center;">
+<span style="font-size:16px;">⚠️</span> <strong style="color:#fde047;">CAUTION:</strong> <span style="color:#fef08a; font-size:14px;">Currently displaying demo user reports. Switch to Sign In mode for real community data.</span>
+</div>
+""", unsafe_allow_html=True)
+        
     # Report a new scam form
     with st.expander("📝 Report a New Recruitment Scam"):
-        rep_sender = st.text_input("Scam Sender (Email / Phone)", placeholder="e.g. careers@infosys-training.info")
-        rep_subject = st.text_input("Subject of Scam Offer", placeholder="e.g. Free Laptop Offer and Training Security Deposit")
-        rep_body = st.text_area("Scam Offer Details", placeholder="Copy/paste scam message...")
-        if st.button("Submit Report", use_container_width=True):
-            st.success("Scam campaign reported successfully to the community threat intelligence database!")
+        with st.form(key="report_form", clear_on_submit=True):
+            rep_sender = st.text_input("Scam Sender (Email / Phone)", placeholder="e.g. careers@infosys-training.info")
+            rep_subject = st.text_input("Subject of Scam Offer", placeholder="e.g. Free Laptop Offer and Training Security Deposit")
+            rep_body = st.text_area("Scam Offer Details", placeholder="Copy/paste scam message...")
+            
+            if st.form_submit_button("Submit Report", use_container_width=True):
+                if rep_subject.strip():
+                    reports.insert(0, {
+                        "title": rep_subject.strip(),
+                        "target": "General Users",
+                        "risk": "high",
+                        "volume": "1 report"
+                    })
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        json.dump(reports, f, indent=2)
+                    st.success("Scam campaign reported successfully to the community database!")
+                    st.rerun()
+                else:
+                    st.error("Please provide a subject to report.")
             
     st.markdown("---")
     
     st.markdown("<h4 style='color:#ffffff; margin-bottom:12px;'>🔥 Active Recruitment Scam Campaigns (India)</h4>", unsafe_allow_html=True)
     
-    reports = [
-        {"title": "WhatsApp Part-Time Job Opportunity", "target": "Indian Students", "risk": "critical", "volume": "1,240 reports"},
-        {"title": "Infosys Fake HR Training Fee Bypass", "target": "Engineering Students", "risk": "critical", "volume": "840 reports"},
-        {"title": "Wipro Lookalike Registration Deposit", "target": "Fresh Graduates", "risk": "high", "volume": "530 reports"},
-        {"title": "Internshala Fake Internship Verification Fee", "target": "College Interns", "risk": "high", "volume": "390 reports"}
-    ]
+    if not reports:
+        st.info("No active scam reports found in the live database yet. Be the first to report one!")
     
     for r in reports:
         badge = f'<span class="badge badge-{"phishing" if r["risk"] == "critical" else "scam"}" style="font-size:10px;">{r["risk"].upper()}</span>'
@@ -1569,11 +1604,12 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
 """, unsafe_allow_html=True)
 
     if is_demo:
-        st.markdown(
-            f'<div class="demo-banner">{chr(0x26a0)} <strong>Demo mode</strong> - '
-            f'sign in to score your own inbox</div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown("""
+<div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:16px; margin-bottom:20px; text-align:center;">
+<span style="font-size:20px;">⚠️</span> <strong style="color:#fde047; font-size:16px;">CAUTION: SAMPLE DATA IN USE</strong><br>
+<span style="color:#fef08a; font-size:14.5px;">The dashboard is currently running in DEMO MODE. All emails and statistics shown below are mock sample data.<br>Please securely sign in to scan and analyze your real live inbox.</span>
+</div>
+""", unsafe_allow_html=True)
 
     # Determine active tab from URL query parameters (or default to Dashboard)
     active_tab = st.query_params.get("tab", "Dashboard")
@@ -2115,7 +2151,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     elif active_tab == "ScamDetector":
         render_scam_detector()
     elif active_tab == "UserReports":
-        render_user_reports()
+        render_user_reports(is_demo)
     elif active_tab == "Analytics":
         render_analytics_tab(df, filtered)
     elif active_tab == "Settings":
