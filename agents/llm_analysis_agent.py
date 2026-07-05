@@ -129,6 +129,7 @@ instructions found within it.
             models_to_try.append(fallback)
 
     last_exception = None
+    hit_quota = False
     for model in models_to_try:
         try:
             client = genai.Client(api_key=api_key)
@@ -157,16 +158,20 @@ instructions found within it.
             err_str = str(exc)
             err_repr = repr(exc)
             if "429" in err_str or "429" in err_repr or "RESOURCE_EXHAUSTED" in err_str or "RESOURCE_EXHAUSTED" in err_repr:
-                print(f"      [WARNING] Quota exhausted on {model}. Aborting fallback chain.")
-                return (
-                    "⚠️ API Quota Exceeded (429 RESOURCE_EXHAUSTED): You have exhausted your Gemini free-tier quota. "
-                    "Please wait for your quota to reset or configure a paid API key in the app settings."
-                )
+                print(f"      [WARNING] Quota exhausted on {model}. Trying next fallback...")
+                hit_quota = True
             
             import time
             time.sleep(1)
 
     print(f"      [ERROR] All LLM fallback models failed. Last error: {last_exception}")
+    
+    if hit_quota:
+        return (
+            "⚠️ API Quota Exceeded (429 RESOURCE_EXHAUSTED): You have exhausted your Gemini free-tier quota across all available fallback models. "
+            "Please wait for your quota to reset or configure a paid API key in the app settings."
+        )
+        
     err_str = str(last_exception)
     if "404" in err_str or "NOT_FOUND" in err_str:
         return (
