@@ -1154,7 +1154,6 @@ def _generate_link_analysis_html(row: dict) -> str:
 
 def render_threat_intel(is_demo: bool = False) -> None:
     if is_demo:
-        import streamlit as st
         st.markdown("""
 <div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:12px; margin-bottom:20px; text-align:center;">
 <span style="font-size:16px;">⚠️</span> <strong style="color:#fde047;">CAUTION:</strong> <span style="color:#fef08a; font-size:14px;">Currently in DEMO MODE. Sign in for live updates.</span>
@@ -1233,7 +1232,6 @@ def render_threat_intel(is_demo: bool = False) -> None:
 
 def render_link_scanner(is_demo: bool = False) -> None:
     if is_demo:
-        import streamlit as st
         st.markdown("""
 <div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:12px; margin-bottom:20px; text-align:center;">
 <span style="font-size:16px;">⚠️</span> <strong style="color:#fde047;">CAUTION:</strong> <span style="color:#fef08a; font-size:14px;">Currently in DEMO MODE. Link scanning is simulated.</span>
@@ -1528,7 +1526,6 @@ def render_user_reports(is_demo: bool) -> None:
 
 def render_analytics_tab(df: pd.DataFrame, filtered: pd.DataFrame, is_demo: bool = False) -> None:
     if is_demo:
-        import streamlit as st
         st.markdown("""
 <div style="background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:8px; padding:12px; margin-bottom:20px; text-align:center;">
 <span style="font-size:16px;">⚠️</span> <strong style="color:#fde047;">CAUTION:</strong> <span style="color:#fef08a; font-size:14px;">Currently displaying demo statistics based on sample data.</span>
