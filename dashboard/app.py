@@ -1787,7 +1787,7 @@ def render_settings_tab(is_demo: bool) -> None:
 <div style="font-size:16px; color:#ffffff; line-height:1.8; font-weight:600;">
 <strong>Mode:</strong> <span style="font-weight:700; color:#38bdf8;">{"Demo Mode" if is_demo else "Authenticated Live Mode"}</span><br>
 <strong>Verification Status:</strong> <span style="font-weight:700; color:#34d399;">Pipelines Verified (17/17 tests passing)</span><br>
-<strong>Scoring Model:</strong> <span style="font-weight:700; color:#818cf8;">Gemini 3.5 Flash (Fallback: 3.1 Pro / 2.5 / 2.0)</span><br>
+<strong>Scoring Model:</strong> <span style="font-weight:700; color:#818cf8;">Gemini 3.5 Flash (Fallback: 3.5 / 2.5 / 2.0)</span><br>
 </div>
 """, unsafe_allow_html=True)
 
