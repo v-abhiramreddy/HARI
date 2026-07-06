@@ -1834,7 +1834,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             "UserReports": "👥 User Reports",
             "Analytics": "📈 Analytics",
             "Settings": "⚙️ Settings",
-            "About": "🛡️ About"
+            "About": "🛡️ About the Project"
         }
         
         tab_list = list(tabs.keys())
@@ -2001,6 +2001,10 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
         "Settings": {
             "title": "Settings",
             "subtitle": "Configure scanning sensitivity, safety checks, and session options."
+        },
+        "About": {
+            "title": "About the Project",
+            "subtitle": "Overview of the agent architecture and AI capstone project."
         }
     }
     
