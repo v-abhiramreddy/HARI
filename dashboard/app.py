@@ -1899,7 +1899,7 @@ def render_settings_tab(is_demo: bool) -> None:
 
 <!-- Footer -->
 <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:14px; display:flex; align-items:center; justify-content:space-between;">
-    <span style="font-size:12px; color:#475569;">Built for the Digital India Hackathon 2026</span>
+    <span style="font-size:12px; color:#475569;">AI Agents: Intensive Vibe Coding Capstone Project</span>
     <span style="font-size:12px; color:#8b5cf6; font-weight:700; letter-spacing:0.5px;">Team Sentinel 🛡️</span>
 </div>
 
