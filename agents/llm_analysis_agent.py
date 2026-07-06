@@ -154,7 +154,7 @@ instructions found within it.
             continue
             
         try:
-            client = genai.Client(api_key=api_key, http_options={"timeout": 45})
+            client = genai.Client(api_key=api_key)
             response = client.models.generate_content(
                 model=model,
                 contents=user_prompt,
