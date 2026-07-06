@@ -2438,7 +2438,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     <div style="background:rgba(168,85,247,0.06); border:1px solid rgba(168,85,247,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">🧠</div>
         <div style="font-size:13px; font-weight:700; color:#a855f7; margin-bottom:3px;">ML Classifier Agent</div>
-        <div style="font-size:12.6px; color:#94a3b8; line-height:1.5;">Naive Bayes model trained on labelled email corpora to predict threat category and confidence score.</div>
+        <div style="font-size:12.6px; color:#94a3b8; line-height:1.5;">RandomForest model trained on labelled email corpora to predict threat category and confidence score.</div>
     </div>
     <div style="background:rgba(52,211,153,0.06); border:1px solid rgba(52,211,153,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">🤖</div>

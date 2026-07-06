@@ -3,7 +3,6 @@
 > **AI-powered email threat detection for your Gmail inbox.**
 > Built by **Team Sentinel** · *AI Agents: Intensive Vibe Coding Capstone Project*
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-6366f1?style=flat-square&logo=render)](https://hari-dashboard.onrender.com)
 [![Python](https://img.shields.io/badge/Python-3.11-3b82f6?style=flat-square&logo=python)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b?style=flat-square&logo=streamlit)](https://streamlit.io)
 [![Gemini](https://img.shields.io/badge/Google-Gemini%20API-4ade80?style=flat-square&logo=google)](https://ai.google.dev)
@@ -20,7 +19,7 @@ HARI is composed of **6 specialized agents** working together in a pipeline:
 |---|---|---|
 | 📥 **Gmail Fetch Agent** | `agents/connector_agent.py` | Authenticates via OAuth2 and fetches email stubs & full bodies from the Gmail API |
 | 🔍 **Heuristic Scoring Agent** | `agents/scoring_agent.py` | Rule-based engine scoring emails 0–100 across sender, links, language, and attachment signals |
-| 🧠 **ML Classifier Agent** | `agents/ml_classifier_agent.py` | Naive Bayes model predicting threat category and confidence score |
+| 🧠 **ML Classifier Agent** | `agents/ml_classifier_agent.py` | RandomForest model predicting threat category and confidence score |
 | 🤖 **Gemini LLM Agent** | `agents/llm_analysis_agent.py` | Google Gemini reads email content and generates plain-language threat explanations |
 | ⚡ **Escalation Agent** | `dashboard/app.py` | Detects Safe↔Risky disagreements between engines and routes to the LLM tiebreaker |
 | 📡 **Threat Intel Agent** | `dashboard/app.py` | Aggregates live threat feeds, breach data, and trending phishing campaign indicators |
@@ -53,7 +52,7 @@ Scoring returns a **0–100 risk score** and classifies each email as: `safe`, `
 - Plain-language output (no jargon) — results shown in 2–3 concise sentences
 - Hardened against **prompt injection** — email body is sandboxed in `<EMAIL_BODY>` XML tags
 - Result caching (`llm_cache.json`) prevents redundant API calls for already-seen emails
-- **Automatic model fallback chain:** `gemini-2.5-flash → 2.5-pro → 1.5-flash → 1.5-pro`
+- **Automatic model fallback chain:** `gemini-3.5-flash → 3.5-flash-lite → 2.5-pro → 2.5-flash → 2.5-flash-lite → 2.0-pro-exp → 2.0-flash → 2.0-flash-lite`
 
 ### 🔐 Universal Sender Trust & ARC Support
 - **Protocol-driven trust** — any sender passing SPF + DKIM + DMARC gets a score reduction
@@ -62,7 +61,7 @@ Scoring returns a **0–100 risk score** and classifies each email as: `safe`, `
 - **Smart TLD handling** — modern brand TLDs (`.io`, `.events`, `.tech`, `.app`) are NOT flagged as typosquatting unless a specific brand is clearly being impersonated
 
 ### 🧠 ML Classifier
-- **Naive Bayes Model** trained on real SpamAssassin ham/spam archives and the Nazario phishing corpus
+- **RandomForest Model** trained on real SpamAssassin ham/spam archives and the Nazario phishing corpus
 - **Features:** TF-IDF text vectorization combined with structural features (link counts, keyword frequencies, lookalike domains)
 - **Zero-Leakage Evaluation:** Dataset strictly deduplicated before train/test split
 
@@ -83,7 +82,7 @@ Scoring returns a **0–100 risk score** and classifies each email as: `safe`, `
 
 ### 🧪 Testing
 - **17 unit tests** across `scoring_agent.py` and `email_utils.py`
-- **11 regression tests** with fictional domains to verify universal trust logic
+- **14 regression tests** with fictional domains to verify universal trust logic
 - False-positive coverage: institutional (.ac.in, .gov.in, .edu), small orgs, mailing lists
 - True-positive coverage: phishing, lottery scams, BEC, fake HR recruitment emails
 
@@ -106,7 +105,7 @@ HARI/
 ├── ml/
 │   ├── collect_data.py         # Downloads/parses Nazario & SpamAssassin datasets
 │   ├── feature_engineering.py  # Builds TF-IDF & structural features (zero-leakage)
-│   ├── train_model.py          # Trains the Naive Bayes classifier
+│   ├── train_model.py          # Trains the RandomForest classifier
 │   └── evaluate.py             # Generates evaluation report & hard-case tests
 ├── dashboard/
 │   └── app.py                  # Streamlit web dashboard (9 tabs, full agent pipeline)
@@ -143,8 +142,6 @@ pip install -r requirements.txt
 | `GEMINI_API_KEY` | Google Gemini API key |
 | `GOOGLE_CLIENT_ID` | OAuth 2.0 client ID |
 | `GOOGLE_CLIENT_SECRET` | OAuth 2.0 client secret |
-| `SUPABASE_URL` | (Optional) Supabase project URL for user reports |
-| `SUPABASE_KEY` | (Optional) Supabase anon key |
 
 ### Run Locally
 
