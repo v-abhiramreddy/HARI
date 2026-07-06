@@ -32,6 +32,15 @@ import pandas as pd
 import requests
 import streamlit as st
 
+def _format_llm_explanation(text: str) -> str:
+    """Format the LLM explanation safely by escaping HTML but supporting simple markdown bolding and newlines."""
+    if not text or pd.isna(text):
+        return ""
+    escaped = _html.escape(str(text))
+    escaped = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', escaped)
+    escaped = escaped.replace('\n', '<br>')
+    return escaped
+
 # ==============================================================================
 #  Path plumbing - use centralised _path_setup instead of inline sys.path hacks
 # ==============================================================================
@@ -131,7 +140,7 @@ div[data-testid="stRadio"] div[role="radiogroup"] label {
     gap: 12px !important;
     padding: 10px 14px !important;
     border-radius: 8px !important;
-    font-size: 15.5px !important;
+    font-size: 17px !important;
     color: #94a3b8 !important;
     background-color: transparent !important;
     border: none !important;
@@ -2157,7 +2166,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
                 if "llm_explanation" in row and pd.notna(row["llm_explanation"]) and row["llm_explanation"]:
                     llm_exp = (
                         f'<div class="llm-explanation">'
-                        f'{chr(0x1f916)} <b>AI Analysis (Gemini):</b> {_html.escape(str(row["llm_explanation"]))}'
+                        f'{chr(0x1f916)} <b>AI Analysis (Gemini):</b> {_format_llm_explanation(row["llm_explanation"])}'
                         f'</div>'
                     )
 
@@ -2255,14 +2264,14 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
                             f'<span style="font-size: 13px; color: #cbd5e1;">ML Classifier: <b>{ml_cat}</b> ({(ml_conf*100):.1f}%)</span>'
                             f'</div>'
                             f'<b>{chr(0x1f916)} AI Tiebreak Analysis (Gemini):</b><br>'
-                            f'{_html.escape(str(explanation))}'
+                            f'{_format_llm_explanation(explanation)}'
                             f'</div>'
                         )
                     else:
                         llm_analysis_html = (
                             f'<div class="llm-explanation">'
                             f'<b>{chr(0x1f916)} AI Threat Analysis (Gemini):</b><br>'
-                            f'{_html.escape(str(explanation))}'
+                            f'{_format_llm_explanation(explanation)}'
                             f'</div>'
                         )
                 elif not is_demo and not api_key:
