@@ -2532,6 +2532,26 @@ def render_signin_page() -> None:
 #contact-modal:target {{
     display: flex !important;
 }}
+.contact-btn {{
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 750 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(56,189,248,0.3) !important;
+    transition: all 0.2s ease !important;
+}}
+.contact-btn:link, .contact-btn:visited, .contact-btn:hover, .contact-btn:active {{
+    color: #0f172a !important;
+    text-decoration: none !important;
+}}
 </style>
 
 <!-- Contact Modal -->
@@ -2579,7 +2599,7 @@ Sign in with Google
 Judges: Contact us to get added as a test user, or try View demo below — no sign-in needed.
 </div>
 <div style="margin-bottom: 2px;">
-<a href="#contact-modal" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%); color: #0f172a !important; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13.5px; font-weight: 750; text-decoration: none !important; cursor: pointer; box-shadow: 0 4px 14px rgba(56,189,248,0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(56,189,248,0.45)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(56,189,248,0.3)';">
+<a href="#contact-modal" class="contact-btn" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(56,189,248,0.45)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(56,189,248,0.3)';">
 <span>✉️</span> Contact Us
 </a>
 </div>
