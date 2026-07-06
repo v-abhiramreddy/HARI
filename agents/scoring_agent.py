@@ -50,6 +50,46 @@ SHORTENER_DOMAINS = {
     "adf.ly",
 }
 
+# Language signal keyword lists (module-level for reuse by ML pipeline)
+# Signal A: Urgency and Threats
+URGENCY_KEYWORDS = [
+    "urgent", "suspension", "suspended", "expire", "expiring",
+    "restrict", "restriction", "restricted", "action required",
+    "immediately", "within 24 hours", "within 12 hours",
+    "deactivated", "lock", "locked", "compromised", "unauthorized",
+    "suspicious login", "billing-support",
+]
+
+# Signal B: Requests for Credentials or Payment
+CREDENTIAL_KEYWORDS_STRONG = [
+    "verify your identity", "verify your credentials", "verify bank details",
+    "recovery seed phrase", "payment details", "billing details",
+    "update your login", "change your password",
+    "recovery seed", "recovery phrase", "security deposit", "refundable deposit",
+    "surcharge",
+]
+CREDENTIAL_PATTERNS = [
+    r"\bverify\b.*\bbank\b",
+    r"\bbank\b.*\bdetails\b",
+]
+CREDENTIAL_KEYWORDS_WEAK = ["registration fee", "processing fee", "training fee", "joining fee"]
+
+# Signal C: Too-Good-To-Be-True Offers
+OFFER_KEYWORDS = [
+    "congratulations", "won", "selected as the winner", "sweepstakes",
+    "cash prize", "gift card", "free gift", "scholarship award", "grant",
+    "received a payment",
+]
+
+# Category 4: Attachment and Content Risk
+ATTACHMENT_KEYWORDS = ["attached file", "attached invoice", "attached receipt", "shipping document"]
+ATTACHMENT_PATTERNS = [
+    r"\battached\b.*\binvoice\b",
+    r"\battached\b.*\breceipt\b",
+]
+DANGEROUS_EXTENSIONS = [r"\.exe\b", r"\.js\b", r"\.vbs\b", r"\.bat\b", r"\.scr\b", r"\.zip\b"]
+MACRO_KEYWORDS = ["enable editing", "enable content", "enable macros"]
+
 # Path for local caching
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 THREAT_CACHE_FILE = os.path.join(PROJECT_ROOT, "threat_feed_cache.txt")
@@ -417,39 +457,20 @@ def score_email(email: dict) -> dict:
     # Signal A: Urgency and Threats
     # TIGHTENED: Removed overly generic words ("deadline", "work from home",
     # "offer letter attached") that fire on legitimate institutional/college emails.
-    urgency_keywords = [
-        "urgent", "suspension", "suspended", "expire", "expiring",
-        "restrict", "restriction", "restricted", "action required",
-        "immediately", "within 24 hours", "within 12 hours",
-        "deactivated", "lock", "locked", "compromised", "unauthorized",
-        "suspicious login", "billing-support",
-    ]
-    has_urgency = any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in urgency_keywords)
+    has_urgency = any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in URGENCY_KEYWORDS)
     if has_urgency:
         signals_language.append("Urgency and Threats")
 
     # Signal B: Requests for Credentials or Payment
     # TIGHTENED: Split into strong and weak signals.
     # Strong signals always trigger. Weak signals require corroboration.
-    credential_keywords_strong = [
-        "verify your identity", "verify your credentials", "verify bank details",
-        "recovery seed phrase", "payment details", "billing details",
-        "update your login", "change your password",
-        "recovery seed", "recovery phrase", "security deposit", "refundable deposit",
-        "surcharge",
-    ]
-    credential_patterns = [
-        r"\bverify\b.*\bbank\b",
-        r"\bbank\b.*\bdetails\b",
-    ]
     has_credential_strong = (
-        any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in credential_keywords_strong)
-        or any(re.search(pat, combined_text) for pat in credential_patterns)
+        any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in CREDENTIAL_KEYWORDS_STRONG)
+        or any(re.search(pat, combined_text) for pat in CREDENTIAL_PATTERNS)
     )
 
     # Weak credential signals: only trigger if accompanied by another risk factor
-    credential_keywords_weak = ["registration fee", "processing fee", "training fee", "joining fee"]
-    has_credential_weak = any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in credential_keywords_weak)
+    has_credential_weak = any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in CREDENTIAL_KEYWORDS_WEAK)
     weak_corroborated = has_credential_weak and (
         auth_has_failure or has_shortener or bool(signals_sender) or bool(signals_links)
     )
@@ -458,33 +479,21 @@ def score_email(email: dict) -> dict:
         signals_language.append("Requests for Credentials or Payment")
 
     # Signal C: Too-Good-To-Be-True Offers
-    offer_keywords = [
-        "congratulations", "won", "selected as the winner", "sweepstakes",
-        "cash prize", "gift card", "free gift", "scholarship award", "grant",
-        "received a payment",
-    ]
-    if any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in offer_keywords):
+    if any(re.search(r'\b' + re.escape(kw) + r'\b', combined_text) for kw in OFFER_KEYWORDS):
         signals_language.append("Too-Good-To-Be-True Offers")
 
     # --- CATEGORY 4: Attachment and Content Risk ---
-    attachment_keywords = ["attached file", "attached invoice", "attached receipt", "shipping document"]
-    attachment_patterns = [
-        r"\battached\b.*\binvoice\b",
-        r"\battached\b.*\breceipt\b",
-    ]
-    has_attachment_signal = any(kw in body_text.lower() for kw in attachment_keywords) or \
-                            any(re.search(pat, body_text.lower()) for pat in attachment_patterns)
+    has_attachment_signal = any(kw in body_text.lower() for kw in ATTACHMENT_KEYWORDS) or \
+                            any(re.search(pat, body_text.lower()) for pat in ATTACHMENT_PATTERNS)
     if has_attachment_signal:
         signals_attachment.append("Unexpected Attachments")
 
-    dangerous_exts = [r"\.exe\b", r"\.js\b", r"\.vbs\b", r"\.bat\b", r"\.scr\b", r"\.zip\b"]
-    link_match = any(any(re.search(ext, link.lower()) for ext in dangerous_exts) for link in links)
-    body_match = any(re.search(ext, body_text.lower()) for ext in dangerous_exts)
+    link_match = any(any(re.search(ext, link.lower()) for ext in DANGEROUS_EXTENSIONS) for link in links)
+    body_match = any(re.search(ext, body_text.lower()) for ext in DANGEROUS_EXTENSIONS)
     if link_match or body_match:
         signals_attachment.append("Dangerous File Extensions")
 
-    macro_keywords = ["enable editing", "enable content", "enable macros"]
-    if any(kw in body_text.lower() for kw in macro_keywords):
+    if any(kw in body_text.lower() for kw in MACRO_KEYWORDS):
         signals_attachment.append("Request to Enable Macros")
 
     # --- CALCULATE CATEGORY SCORES ---
