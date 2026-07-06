@@ -1833,8 +1833,8 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             "ScamDetector": "💀 Scam Detector",
             "UserReports": "👥 User Reports",
             "Analytics": "📈 Analytics",
-            "Settings": "⚙️ Settings",
-            "About": "🛡️ About the Project"
+            "About": "🛡️ About the Project",
+            "Settings": "⚙️ Settings"
         }
         
         tab_list = list(tabs.keys())
@@ -1998,13 +1998,13 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
             "title": "Analytics Dashboard",
             "subtitle": "Charts showing email safety distribution and risk trends over time."
         },
-        "Settings": {
-            "title": "Settings",
-            "subtitle": "Configure scanning sensitivity, safety checks, and session options."
-        },
         "About": {
             "title": "About the Project",
             "subtitle": "Overview of the agent architecture and AI capstone project."
+        },
+        "Settings": {
+            "title": "Settings",
+            "subtitle": "Configure scanning sensitivity, safety checks, and session options."
         }
     }
     
