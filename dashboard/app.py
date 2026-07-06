@@ -131,7 +131,7 @@ div[data-testid="stRadio"] div[role="radiogroup"] label {
     gap: 12px !important;
     padding: 10px 14px !important;
     border-radius: 8px !important;
-    font-size: 13.5px !important;
+    font-size: 15.5px !important;
     color: #94a3b8 !important;
     background-color: transparent !important;
     border: none !important;
@@ -2671,13 +2671,15 @@ def main() -> None:
         else:
             render_dashboard(df, is_demo=False)
             
-            st.write("")
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                if st.button("Load More Emails", use_container_width=True):
-                    st.session_state["email_count"] += 10
-                    del st.session_state["scored_df"]
-                    st.rerun()
+            active_tab = st.query_params.get("tab", "Dashboard")
+            if active_tab in ["Dashboard", "Analysis", "Settings"]:
+                st.write("")
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    if st.button("Load More Emails", use_container_width=True):
+                        st.session_state["email_count"] += 10
+                        del st.session_state["scored_df"]
+                        st.rerun()
         return
 
     # -- 5. Sign-in page (default) ----                                     
