@@ -518,6 +518,10 @@ def score_email(email: dict) -> dict:
     is_scam_offer = "Too-Good-To-Be-True Offers" in signals_language
     has_impersonation = bool(signals_sender or signals_links)
 
+    # Force a minimum threshold if we detect a classic scam offer to avoid categorizing it as safe.
+    if is_scam_offer:
+        total_score = max(total_score, 35)
+
     if total_score <= 20:
         category = "safe"
     elif total_score <= 50:

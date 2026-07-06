@@ -148,6 +148,25 @@ div[data-testid="stRadio"] div[role="radiogroup"] label p {
     cursor: pointer !important;
     transition: background 0.2s, color 0.2s !important;
 }
+div[data-testid="stExpander"] {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+div[data-testid="stExpander"] summary {
+    background-color: #1e293b !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+}
+div[data-testid="stExpander"] summary:hover {
+    background-color: #334155 !important;
+}
+div[data-testid="stExpander"] summary p {
+    font-weight: 600 !important;
+    color: #f8fafc !important;
+    font-size: 15px !important;
+}
 /* Hide the default radio circle/dot */
 div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] > div:first-child {
     display: none !important;
@@ -2060,85 +2079,7 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
         st.markdown("---")
 
     if active_tab == "Dashboard":
-        # -- Analytics Section ----                                              
-        with st.expander("📊 View Inbox Analytics & Risk Trends", expanded=False):
-            chart_col1, chart_col2 = st.columns(2)
-            with chart_col1:
-                st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Category Distribution</p>", unsafe_allow_html=True)
-                if not filtered.empty:
-                    import plotly.graph_objects as go
-                    cat_counts = filtered["category"].value_counts().reindex(["safe", "spam", "scam", "phishing"], fill_value=0)
-                    
-                    # Brand matching colors (green, orange, light-red, deep-red)
-                    colors = ["#4ade80", "#fb923c", "#fc8181", "#f87171"]
-                    
-                    fig = go.Figure(data=[go.Bar(
-                        x=["Safe", "Spam", "Scam", "Phishing"],
-                        y=cat_counts.values,
-                        marker_color=colors,
-                        text=cat_counts.values,
-                        textposition='auto',
-                        hovertemplate='%{x}: %{y} emails<extra></extra>'
-                    )])
-                    
-                    fig.update_layout(
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        margin=dict(l=10, r=10, t=10, b=10),
-                        height=260,
-                        font=dict(color='#94a3b8', family='Inter, sans-serif'),
-                        yaxis=dict(
-                            gridcolor='rgba(255,255,255,0.05)',
-                            zeroline=False,
-                            tickfont=dict(color='#64748b')
-                        ),
-                        xaxis=dict(
-                            tickfont=dict(color='#94a3b8')
-                        )
-                    )
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-                else:
-                    st.info("No data available to plot.")
-                
-            with chart_col2:
-                st.markdown("<p style='font-size:14px; font-weight:600; color:#94a3b8;'>Risk Score Spectrum</p>", unsafe_allow_html=True)
-                if not filtered.empty:
-                    import plotly.graph_objects as go
-                    score_bins = pd.cut(filtered["score"], bins=[-1, 20, 50, 80, 100], labels=["0-20 (Safe)", "21-50 (Low/Spam)", "51-80 (Likely Phish)", "81-100 (High Phish)"])
-                    score_counts = score_bins.value_counts().sort_index()
-                    
-                    # Graduated risk spectrum colors
-                    colors = ["#4ade80", "#fb923c", "#f87171", "#ef4444"]
-                    
-                    fig = go.Figure(data=[go.Bar(
-                        x=list(score_counts.index),
-                        y=score_counts.values,
-                        marker_color=colors,
-                        text=score_counts.values,
-                        textposition='auto',
-                        hovertemplate='%{x}: %{y} emails<extra></extra>'
-                    )])
-                    
-                    fig.update_layout(
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        margin=dict(l=10, r=10, t=10, b=10),
-                        height=260,
-                        font=dict(color='#94a3b8', family='Inter, sans-serif'),
-                        yaxis=dict(
-                            gridcolor='rgba(255,255,255,0.05)',
-                            zeroline=False,
-                            tickfont=dict(color='#64748b')
-                        ),
-                        xaxis=dict(
-                            tickfont=dict(color='#94a3b8')
-                        )
-                    )
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-                else:
-                    st.info("No data available to plot.")
-
-        st.markdown("---")
+        # Analytics chart removed to reduce clutter on the main Dashboard
 
         # -- Results count ----                                                  
         extra = "  ·  filtered" if len(filtered) < total else ""
@@ -2362,18 +2303,32 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
         render_user_reports(is_demo)
     elif active_tab == "Analytics":
         render_analytics_tab(df, filtered, is_demo)
+        
+        # -- Raw data expander ----
+        with st.expander("🗄️ Document View (Raw Data Table)"):
+            display_cols = ["date", "sender", "subject", "category", "score"]
+            existing_cols = [c for c in display_cols if c in filtered.columns]
+            st.dataframe(
+                filtered[existing_cols],
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "date": st.column_config.DatetimeColumn("Date", format="MMM DD, YYYY, h:mm a"),
+                    "sender": "Sender",
+                    "subject": "Subject",
+                    "category": "Risk Category",
+                    "score": st.column_config.ProgressColumn(
+                        "Risk Score",
+                        help="Threat severity out of 100",
+                        format="%d",
+                        min_value=0,
+                        max_value=100,
+                    ),
+                }
+            )
+
     elif active_tab == "Settings":
         render_settings_tab(is_demo)
-
-    # -- Raw data expander (only shown in Dashboard and Analytics) ----
-    if active_tab in ["Dashboard", "Analytics"]:
-        st.markdown("---")
-        with st.expander("Document View raw data table"):
-            show_cols = [c for c in
-                         ["email_id", "subject", "sender", "score",
-                          "category", "confidence", "explanation", "llm_explanation"]
-                         if c in filtered.columns]
-            st.dataframe(filtered[show_cols], use_container_width=True, hide_index=True)
 
     # -- Privacy note ----                                                   
     if not is_demo:
