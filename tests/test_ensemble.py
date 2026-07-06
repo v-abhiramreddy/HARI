@@ -20,7 +20,7 @@ def evaluate_ensemble(email_obj):
         ml_conf = 0.0
         
     force_escalation = False
-    if rule_cat != ml_cat and ml_conf >= 0.60:
+    if rule_cat != ml_cat and ml_conf >= 0.50:
         force_escalation = True
         
     return rule_cat, ml_cat, ml_conf, force_escalation
