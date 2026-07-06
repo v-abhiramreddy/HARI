@@ -991,8 +991,8 @@ def fetch_and_score_generator(access_token: str, count: int = 10):
                 
             scored["disagreement_escalated"] = force_escalation
             
-            # Threshold-based Gemini analysis OR forced escalation
-            if scored["score"] >= 60 or force_escalation:
+            # Category-based Gemini analysis (any non-safe) OR forced escalation
+            if rule_cat in RISKY or force_escalation:
                 import sys
                 if "utils" not in sys.path:
                     sys.path.append(str(_PROJECT_ROOT))
@@ -1021,16 +1021,10 @@ def fetch_and_score_generator(access_token: str, count: int = 10):
                     llm_cache[cache_key] = explanation
                     atomic_write_json(cache_path, llm_cache)
             else:
-                if rule_cat == "safe":
-                    if disagreement:
-                        scored["llm_explanation"] = f"Rule engine says safe, ML says {ml_cat} (low confidence {ml_conf*100:.0f}%). Kept safe. Deep analysis skipped."
-                    else:
-                        scored["llm_explanation"] = "Email heuristically determined safe. Deep analysis skipped."
+                if disagreement:
+                    scored["llm_explanation"] = f"Rule engine says safe, ML says {ml_cat} (low confidence {ml_conf*100:.0f}%). Kept safe. Deep analysis skipped."
                 else:
-                    if disagreement:
-                        scored["llm_explanation"] = f"Rule engine says {rule_cat}, ML says {ml_cat} (low confidence). Deep analysis skipped as high-risk threshold was not met."
-                    else:
-                        scored["llm_explanation"] = f"Email heuristically flagged as {rule_cat}. Deep analysis skipped as high-risk threshold was not met."
+                    scored["llm_explanation"] = "Email heuristically determined safe. Deep analysis skipped."
                 
             rows.append(scored)
         except PermissionError:
