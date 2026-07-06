@@ -1,4 +1,4 @@
-# HARI — Inbox Guardian 🛡️
+# Inbox Guardian 🛡️
 
 > **AI-powered email threat detection for your Gmail inbox.**
 > Built by **Team Sentinel** · *AI Agents: Intensive Vibe Coding Capstone Project*
@@ -7,13 +7,13 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b?style=flat-square&logo=streamlit)](https://streamlit.io)
 [![Gemini](https://img.shields.io/badge/Google-Gemini%20API-4ade80?style=flat-square&logo=google)](https://ai.google.dev)
 
-HARI (Heuristic AI Risk Inspector) is a multi-agent email security platform that combines fast rule-based heuristics, a trained ML classifier, and Google Gemini LLM deep-analysis to detect phishing, scams, and spam in real-time — directly in your browser via a Streamlit dashboard.
+Inbox Guardian is a multi-agent email security platform that combines fast rule-based heuristics, a trained ML classifier, and Google Gemini LLM deep-analysis to detect phishing, scams, and spam in real-time — directly in your browser via a Streamlit dashboard.
 
 ---
 
 ## 🤖 Agent Pipeline
 
-HARI is composed of **6 specialized agents** working together in a pipeline:
+Inbox Guardian is composed of **6 specialized agents** working together in a pipeline:
 
 | Agent | File | Role |
 |---|---|---|
@@ -91,7 +91,7 @@ Scoring returns a **0–100 risk score** and classifies each email as: `safe`, `
 ## 🗂️ Project Structure
 
 ```
-HARI/
+InboxGuardian/
 ├── agents/
 │   ├── scoring_agent.py        # Heuristic scoring engine (0–100 score, 4 signal categories)
 │   ├── llm_analysis_agent.py   # Gemini LLM deep analysis + verdict parsing
@@ -130,8 +130,8 @@ HARI/
 ### Installation
 
 ```bash
-git clone https://github.com/v-abhiramreddy/HARI.git
-cd HARI
+git clone https://github.com/v-abhiramreddy/InboxGuardian.git
+cd InboxGuardian
 pip install -r requirements.txt
 ```
 
