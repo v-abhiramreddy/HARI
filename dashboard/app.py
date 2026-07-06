@@ -2392,7 +2392,6 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%);
     pointer-events:none;
 "></div>
-
 <!-- Header -->
 <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
     <div style="
@@ -2412,57 +2411,47 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
         </div>
     </div>
 </div>
-
 <p style="color:#94a3b8; font-size:14px; line-height:1.7; margin-bottom:24px; margin-top:0;">
     An AI-powered email threat detection platform that combines heuristic rules, machine learning,
     and Google Gemini LLM analysis to identify phishing, scam, and spam emails in real time
     directly from a user's Gmail inbox.
 </p>
-
 <!-- Agents grid -->
 <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:1.4px; margin-bottom:13px;">
     🤖 &nbsp;Agent Pipeline
 </div>
 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:26px;">
-
     <div style="background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">📥</div>
         <div style="font-size:13px; font-weight:700; color:#38bdf8; margin-bottom:3px;">Gmail Fetch Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Authenticates via OAuth2 and fetches email stubs &amp; full bodies from the Gmail API.</div>
     </div>
-
     <div style="background:rgba(251,146,60,0.06); border:1px solid rgba(251,146,60,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">🔍</div>
         <div style="font-size:13px; font-weight:700; color:#fb923c; margin-bottom:3px;">Heuristic Scoring Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Rule-based engine analysing sender domains, links, language patterns, and attachment signals.</div>
     </div>
-
     <div style="background:rgba(168,85,247,0.06); border:1px solid rgba(168,85,247,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">🧠</div>
         <div style="font-size:13px; font-weight:700; color:#a855f7; margin-bottom:3px;">ML Classifier Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Naive Bayes model trained on labelled email corpora to predict threat category and confidence score.</div>
     </div>
-
     <div style="background:rgba(52,211,153,0.06); border:1px solid rgba(52,211,153,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">🤖</div>
         <div style="font-size:13px; font-weight:700; color:#34d399; margin-bottom:3px;">Gemini LLM Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Google Gemini reads email content and acts as an expert tiebreaker when heuristic and ML models disagree.</div>
     </div>
-
     <div style="background:rgba(248,113,113,0.06); border:1px solid rgba(248,113,113,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">⚡</div>
         <div style="font-size:13px; font-weight:700; color:#f87171; margin-bottom:3px;">Escalation Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Detects Safe↔Risky disagreements between engines and routes ambiguous emails to the LLM tiebreaker.</div>
     </div>
-
     <div style="background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.18); border-radius:10px; padding:14px;">
         <div style="font-size:18px; margin-bottom:5px;">📡</div>
         <div style="font-size:13px; font-weight:700; color:#fbbf24; margin-bottom:3px;">Threat Intel Agent</div>
         <div style="font-size:12px; color:#64748b; line-height:1.5;">Aggregates live threat feeds, recent breach data, and trending phishing campaign indicators.</div>
     </div>
-
 </div>
-
 <!-- Tech stack -->
 <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:1.4px; margin-bottom:11px;">
     🔧 &nbsp;Tech Stack
@@ -2477,13 +2466,11 @@ def render_dashboard(df: pd.DataFrame, is_demo: bool = False) -> None:
     <span style="background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); color:#38bdf8; border-radius:20px; padding:5px 13px; font-size:12px; font-weight:600;">Pandas / NumPy</span>
     <span style="background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.25); color:#a78bfa; border-radius:20px; padding:5px 13px; font-size:12px; font-weight:600;">Render (Cloud)</span>
 </div>
-
 <!-- Footer -->
 <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px; display:flex; align-items:center; justify-content:space-between;">
     <span style="font-size:12.5px; color:#475569;">AI Agents: Intensive Vibe Coding Capstone Project</span>
     <span style="font-size:13px; color:#8b5cf6; font-weight:700; letter-spacing:0.5px;">Team Sentinel 🛡️</span>
 </div>
-
 </div>
 """, unsafe_allow_html=True)
 
