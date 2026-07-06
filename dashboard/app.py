@@ -134,13 +134,14 @@ div[data-testid="stRadio"] div[role="radiogroup"] {
     flex-direction: column !important;
     gap: 14px !important;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] label {
+div[data-testid="stRadio"] div[role="radiogroup"] label,
+div[data-testid="stRadio"] div[role="radiogroup"] label p {
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
     padding: 10px 14px !important;
     border-radius: 8px !important;
-    font-size: 17px !important;
+    font-size: 18px !important;
     color: #94a3b8 !important;
     background-color: transparent !important;
     border: none !important;
