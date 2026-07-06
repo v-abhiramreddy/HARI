@@ -2552,6 +2552,26 @@ def render_signin_page() -> None:
     color: #0f172a !important;
     text-decoration: none !important;
 }}
+.demo-btn {{
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 750 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(168,85,247,0.3) !important;
+    transition: all 0.2s ease !important;
+}}
+.demo-btn:link, .demo-btn:visited, .demo-btn:hover, .demo-btn:active {{
+    color: #ffffff !important;
+    text-decoration: none !important;
+}}
 </style>
 
 <!-- Contact Modal -->
@@ -2595,17 +2615,17 @@ def render_signin_page() -> None:
 Sign in with Google
 </a>
 <div style="margin-top: 24px; padding: 16px; background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; text-align: center;">
-<div style="font-size: 15.5px; color: #ffffff; font-weight: 700; line-height: 1.5; margin-bottom: 12px;">
-Judges: Contact us to get added as a test user, or try View demo below — no sign-in needed.
+<div style="font-size: 15.5px; color: #ffffff; font-weight: 700; line-height: 1.5; margin-bottom: 16px;">
+Judges: Contact us to get added as a test user (This app connects to Gmail, so sign-in is currently limited to approved test accounts (Google's OAuth testing-mode restriction)), or try View demo below — no sign-in needed.
 </div>
-<div style="margin-bottom: 2px;">
+<div style="display: flex; gap: 12px; justify-content: center; align-items: center; margin-bottom: 2px;">
 <a href="#contact-modal" class="contact-btn" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(56,189,248,0.45)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(56,189,248,0.3)';">
 <span>✉️</span> Contact Us
 </a>
+<a href="?demo=1" class="demo-btn" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(168,85,247,0.45)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(168,85,247,0.3)';">
+<span>👁️</span> View Demo
+</a>
 </div>
-</div>
-<div class="demo-link-container" style="margin-top: 18px; font-size: 14.5px; font-weight: 700; color: #ffffff;">
-No account? <a href="?demo=1" id="view-demo-link" style="color: #38bdf8 !important; text-decoration: underline !important; font-weight: 800;">View demo</a>
 </div>
 </div>
 </div>
