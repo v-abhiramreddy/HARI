@@ -74,8 +74,8 @@ def main():
     print("\n--- Training RandomForestClassifier ---")
     from sklearn.ensemble import RandomForestClassifier
     rf = RandomForestClassifier(
-        n_estimators=200,
-        max_depth=None,
+        n_estimators=100,
+        max_depth=10,
         min_samples_split=5,
         random_state=RANDOM_STATE,
         n_jobs=-1,
