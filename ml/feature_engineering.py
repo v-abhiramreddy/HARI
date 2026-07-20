@@ -13,11 +13,14 @@ import re
 import sys
 from pathlib import Path
 
-import numpy as np
-import joblib
-from scipy.sparse import hstack, csr_matrix
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.preprocessing import LabelEncoder
+try:
+    import numpy as np
+    import joblib
+    from scipy.sparse import hstack, csr_matrix
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.preprocessing import LabelEncoder
+except ImportError:
+    pass
 
 # -- Path setup --
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

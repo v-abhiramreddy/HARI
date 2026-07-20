@@ -1,8 +1,11 @@
 import logging
-import joblib
-import numpy as np
+try:
+    import joblib
+    import numpy as np
+    from scipy.sparse import hstack, csr_matrix
+except ImportError:
+    pass
 from pathlib import Path
-from scipy.sparse import hstack, csr_matrix
 
 # Add project root to path for imports
 import sys
